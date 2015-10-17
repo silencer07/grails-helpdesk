@@ -8,5 +8,6 @@ enum EquipmentStatus {
     BORROWED,
     ON_HOLD,
     DISPOSED,
-    MISSING
+    MISSING,
+    WITH_DAMAGE
 }

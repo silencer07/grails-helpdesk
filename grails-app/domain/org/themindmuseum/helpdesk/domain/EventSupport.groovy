@@ -9,6 +9,7 @@ class EventSupport extends SupportTicket{
     Set<Equipment> equipments
     Set<Employee> supportStaff
     String venue
+    boolean resourceIssued
 
     static constraints = {
         startTime nullable: false

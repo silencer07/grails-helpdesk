@@ -18,6 +18,7 @@ class Equipment {
     LocalDate datePurchased
     LocalDate warrantyEndDate
     LocalDate dateDisposed
+    String notes
 
     static constraints = {
         name blank:false, size : 1..50
@@ -32,6 +33,7 @@ class Equipment {
         warrantyEndDate nullable: false
         //TODO dateDisposed should be <= datePurchased
         vendor nullable: false
+        notes nullable: true
     }
 
     static hasOne = [vendor:Vendor]
