@@ -1,5 +1,3 @@
-
-
 // Added by the Spring Security Core plugin:
 grails.plugin.springsecurity.userLookup.userDomainClassName = 'org.themindmuseum.helpdesk.domain.Employee'
 grails.plugin.springsecurity.userLookup.usernamePropertyName = 'email'
@@ -20,3 +18,5 @@ grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 	'/**/favicon.ico':  ['permitAll']
 ]
 
+grails.plugin.springsecurity.rejectIfNoRule = false //set to true to secure by default
+grails.plugin.springsecurity.fii.rejectPublicInvocations = false //and this one too
