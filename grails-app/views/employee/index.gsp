@@ -1,4 +1,4 @@
-<!doctype html>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <html>
     <head>
         <!-- The css files that needs to be changed are in grails-app/assets -->
