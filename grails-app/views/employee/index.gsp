@@ -9,6 +9,8 @@
             stylesheets - the main commented below refers to main.css. of course
                 it also uses something from application.css, errors.css. mobile.css needs not to be fixed
             javascript - js files. not unless you plan to animate stuff then no need for this
+
+            NEVER USE AN INLINE STYLE. ALL STYLES MUST BE IN CSS FILES!
         -->
         %{--<meta name="layout" content="main"/>--}%
         <title>Employee Home</title>
