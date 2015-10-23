@@ -4,11 +4,9 @@ import java.time.LocalDateTime
 
 class AssetBorrowing extends SupportTicket{
 
-    Set<Equipment> equipments
     LocalDateTime borrowedDate
     LocalDateTime returningDate
     LocalDateTime returnedDate
-
 
     static constraints = {
         //TODO borrowedDate >= returningDate

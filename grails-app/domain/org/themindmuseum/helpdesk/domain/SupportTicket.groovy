@@ -6,14 +6,12 @@ import java.time.LocalDateTime
 
 abstract class SupportTicket {
 
-    Employee reportedBy
     LocalDateTime timeFiled
     String description
     TicketStatus status
     LocalDateTime timeReopened
     LocalDateTime timeClosed
     String resolutionNotes
-    Employee assignee
 
     static constraints = {
         timeFiled nullabe:false

@@ -6,8 +6,6 @@ class EventSupport extends SupportTicket{
 
     LocalDateTime startTime
     LocalDateTime endTime
-    Set<Equipment> equipments
-    Set<Employee> supportStaff
     String venue
     boolean resourceIssued
 

@@ -1,10 +1,36 @@
 package org.themindmuseum.helpdesk.domain
 
-class Role {
+class Role implements Serializable {
 
-    String name
+	private static final long serialVersionUID = 1
 
-    static constraints = {
-        name unique:true, blank:false, size : 1..100
-    }
+	String authority
+
+	Role(String authority) {
+		super()
+		this.authority = authority
+	}
+
+	@Override
+	int hashCode() {
+		authority?.hashCode() ?: 0
+	}
+
+	@Override
+	boolean equals(other) {
+		is(other) || (other instanceof Role && other.authority == authority)
+	}
+
+	@Override
+	String toString() {
+		authority
+	}
+
+	static constraints = {
+		authority blank: false, unique: true
+	}
+
+	static mapping = {
+		cache true
+	}
 }
