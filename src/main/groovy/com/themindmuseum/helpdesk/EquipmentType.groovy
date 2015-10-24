@@ -5,5 +5,7 @@ package com.themindmuseum.helpdesk
  */
 enum EquipmentType {
     PC_PARTS,
+    LAPTOP,
+    DESKTOP,
     EXHIBIT_APPARATUS
 }

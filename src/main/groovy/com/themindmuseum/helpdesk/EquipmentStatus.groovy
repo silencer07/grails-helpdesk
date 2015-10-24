@@ -5,6 +5,7 @@ package com.themindmuseum.helpdesk
  */
 enum EquipmentStatus {
     AVAILABLE,
+    ISSUED,
     BORROWED,
     ON_HOLD,
     DISPOSED,

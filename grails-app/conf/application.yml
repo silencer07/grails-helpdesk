@@ -65,6 +65,8 @@ grails:
                 scriptlets: html
                 taglib: none
                 staticparts: none
+    gorm:
+            failOnError : true
 ---
 hibernate:
     cache:

@@ -6,21 +6,24 @@ import java.time.LocalDateTime
 
 abstract class SupportTicket {
 
-    LocalDateTime timeFiled
+    LocalDateTime timeFiled = LocalDateTime.now()
     String subject
     String description
-    TicketStatus status
+    TicketStatus status = TicketStatus.OPEN
     LocalDateTime timeReopened
-    LocalDateTime timeClosed
+    LocalDateTime timeResolved
     String resolutionNotes
 
     static constraints = {
         timeFiled nullabe:false
         subject size:1..200
-        description size:1..1000
-        status nullable:false
+        description nullable: true, maxSize:1000
+        status nullable:false, validator: mustHaveAnAssigneeWhenResolved
         reportedBy nullable:false
-        resolutionNotes maxSize: 4 * 1024 * 1024 //4GB of data here
+        resolutionNotes nullable: true, maxSize: 4 * 1024 * 1024 //4GB of data here
+        timeReopened nullable: true
+        timeResolved nullable: true
+        assignee nullable: true, validator: mustHaveAnAssigneeWhenResolved
     }
 
     static belongsTo = [reportedBy: Employee, assignee: Employee]
@@ -28,5 +31,12 @@ abstract class SupportTicket {
     static mapping = {
         tablePerConcreteClass true
         resolutionNotes lazy: true //needs to be lazy-loaded since it is a huge file
+    }
+
+    static def mustHaveAnAssigneeWhenResolved = { status, instance ->
+        if(TicketStatus.unresolvedStatuses.contains(status) && !instance.assignee){
+            return 'must.have.assignee.when.resolved'
+        }
+        return true
     }
 }
