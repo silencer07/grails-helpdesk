@@ -1,0 +1,38 @@
+<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page import="org.themindmuseum.helpdesk.utils.DateUtils" %>
+<html>
+<head>
+    <title>Open/On-hold Incidents</title>
+</head>
+<body>
+    <h1>Open/On-hold Incidents</h1>
+    <div>
+        <div>
+            <g:if test="${incidents}">
+                <table>
+                    <thead>
+                        <th>Concern</th>
+                        <th>Filed Date</th>
+                        <th>Filed Time</th>
+                        <th>Status</th>
+                        </thead>
+                    <tbody>
+                        <g:each in="${incidents}" var="incident">
+                            <g:set var="timeFiledDate" value="${DateUtils.asDate(incident.timeFiled)}"/>
+                            <tr>
+                                <td><g:link action="view" id="incident.id">${incident.subject}</g:link></td>
+                                <td><g:formatDate date="${timeFiledDate}" format="MM/dd/yyyy"/></td>
+                                <td><g:formatDate date="${timeFiledDate}" format="mm:ss"/></td>
+                                <td>${incident.status}</td>
+                            </tr>
+                        </g:each>
+                    </tbody>
+                </table>
+            </g:if>
+            <g:else>
+                <p>You have no filed incidents.</p>
+            </g:else>
+        </div>
+    </div>
+</body>
+</html>
