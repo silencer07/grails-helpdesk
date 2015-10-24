@@ -87,9 +87,6 @@ dependencies {
     testRuntime 'org.seleniumhq.selenium:selenium-htmlunit-driver:2.44.0'
 
     console "org.grails:grails-console"
-
-    compile "com.siprell.plugins:bootstrap-framework:1.0.3"
-
     compile "org.grails.plugins:spring-security-core:3.0.0.M1"
 }
 

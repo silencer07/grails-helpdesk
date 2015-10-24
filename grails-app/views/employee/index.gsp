@@ -12,11 +12,11 @@
 
             NEVER USE AN INLINE STYLE. ALL STYLES MUST BE IN CSS FILES!
         -->
-        %{--<meta name="layout" content="main"/>--}%
+        <meta name="layout" content="main"/>
         <title>Employee Home</title>
     </head>
     <body>
-        <div>
+        <div class="container" role="main">
             <div>
                 My Incidents
                 <table>
