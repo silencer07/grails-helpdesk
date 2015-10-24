@@ -2,10 +2,10 @@
 <%@ page import="org.themindmuseum.helpdesk.utils.DateUtils" %>
 <html>
 <head>
-    <title>Open/On-hold Incidents</title>
+    <title>My Incidents</title>
 </head>
 <body>
-    <h1>Open/On-hold Incidents</h1>
+    <h1>My Incidents</h1>
     <div>
         <div>
             <g:if test="${incidents}">
