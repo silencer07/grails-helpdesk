@@ -3,12 +3,13 @@ package org.themindmuseum.helpdesk.controller
 import org.themindmuseum.helpdesk.TicketStatus
 import grails.plugin.springsecurity.annotation.Secured
 import org.themindmuseum.helpdesk.domain.Incident
+import sun.security.krb5.internal.Ticket
 
 class IncidentController {
 
     def springSecurityService
 
-    static allowedMethods = [addAdditionalNotes: 'POST', closeIncident: 'POST', reopenIncident: 'POST']
+    static allowedMethods = [addAdditionalNotes: 'POST', resolveIncident: 'POST', reopenIncident: 'POST']
 
     def index() {}
 
@@ -60,13 +61,29 @@ class IncidentController {
     }
 
     @Secured(["hasAnyRole('IT', 'EMPLOYEE')"])
-    def closeIncident(){
-
+    def resolveIncident(){
+        changeIncidentStatus(params.incidentId?.toLong(), TicketStatus.RESOLVED)
     }
 
     @Secured(["hasAnyRole('IT', 'EMPLOYEE')"])
     def reopenIncident(){
+        changeIncidentStatus(params.incidentId?.toLong(), TicketStatus.OPEN)
+    }
 
+    private def changeIncidentStatus(long id, TicketStatus status){
+        def incident = getEmployeeIncident(id)
+        if(incident){
+            incident.status = status
+            incident.save()
+            redirect(action: 'details', id: incident.id)
+            return
+        }
+
+        if(status == TicketStatus.OPEN){
+            redirect action : 'myOpenIncidents'
+        } else {
+            redirect action : 'myClosedIncidentsIncidents'
+        }
     }
 
     private def getEmployeeIncident(long id) {

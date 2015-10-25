@@ -18,12 +18,12 @@ abstract class SupportTicket {
         timeFiled nullabe:false
         subject size:1..200
         description nullable: true, maxSize:1000
-        status nullable:false, validator: mustHaveAnAssigneeWhenResolved
+        status nullable:false
         reportedBy nullable:false
         resolutionNotes nullable: true, maxSize: 4 * 1024 * 1024 //4GB of data here
         timeReopened nullable: true
         timeResolved nullable: true
-        assignee nullable: true, validator: mustHaveAnAssigneeWhenResolved
+        assignee nullable: true
     }
 
     static belongsTo = [reportedBy: Employee, assignee: Employee]
@@ -31,12 +31,5 @@ abstract class SupportTicket {
     static mapping = {
         tablePerConcreteClass true
         resolutionNotes lazy: true //needs to be lazy-loaded since it is a huge file
-    }
-
-    static def mustHaveAnAssigneeWhenResolved = { status, instance ->
-        if(status == TicketStatus.RESOLVED && !instance.assignee){
-            return 'must.have.assignee.when.resolved'
-        }
-        return true
     }
 }

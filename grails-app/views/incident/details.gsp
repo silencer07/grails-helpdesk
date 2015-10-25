@@ -27,7 +27,7 @@
                 Add additional notes: <br/>
                 <g:textArea name="additionalNotes"/>
                 <g:actionSubmit value="Add Notes" action="addAdditionalNotes"/>
-                <g:actionSubmit value="Close Incident" action="closeIncident"/>
+                <g:actionSubmit value="Resolve Incident" action="resolveIncident"/>
             </g:if>
             <g:else>
                 <g:actionSubmit value="Reopen Incident" action="reopenIncident"/>
