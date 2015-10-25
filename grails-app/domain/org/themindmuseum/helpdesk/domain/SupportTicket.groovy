@@ -7,12 +7,12 @@ import java.time.LocalDateTime
 abstract class SupportTicket {
 
     LocalDateTime timeFiled = LocalDateTime.now()
-    String subject
-    String description
+    String subject = ''
+    String description = ''
     TicketStatus status = TicketStatus.OPEN
     LocalDateTime timeReopened
     LocalDateTime timeResolved
-    String resolutionNotes
+    String resolutionNotes =''
 
     static constraints = {
         timeFiled nullabe:false

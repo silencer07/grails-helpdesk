@@ -16,10 +16,10 @@
         Equipment : ${incident?.equipment.name} <br/>
         Manufacturer : ${incident?.equipment.manufacturer} <br/>
         Serial No. : ${incident?.equipment.serialNumber} <br/>
-        description : <br/>
-            <p>${incident?.description}</p>
+        Concern : <br/>
+            <textArea readonly="true">${incident?.description}</textArea>
         notes:
-            <p>${incident?.description}</p>
+            <textArea readonly="true">${incident?.resolutionNotes}</textArea>
 
         <g:form method="post">
             <g:hiddenField name="incidentId" value="${incident?.id}"/>

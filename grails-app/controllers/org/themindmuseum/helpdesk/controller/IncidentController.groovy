@@ -42,7 +42,21 @@ class IncidentController {
 
     @Secured(["hasAnyRole('IT', 'EMPLOYEE')"])
     def addAdditionalNotes(){
-        def incident = getEmployeeIncident(params.incidentId)
+        def incident = getEmployeeIncident(params.incidentId?.toLong())
+        if(incident){
+            if(params.additionalNotes){
+                def employee = springSecurityService.loadCurrentUser()
+                incident.resolutionNotes +=
+                """${employee.firstName} ${employee.lastName} : \n
+                   | ${params.additionalNotes} \n
+                   |""".stripMargin().stripIndent()
+                println incident.resolutionNotes
+                incident.save()
+            }
+            redirect(action: 'details', id: incident.id)
+        } else {
+            redirect action : 'myOpenIncidents'
+        }
     }
 
     @Secured(["hasAnyRole('IT', 'EMPLOYEE')"])
