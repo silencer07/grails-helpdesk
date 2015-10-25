@@ -1,7 +1,7 @@
 package org.themindmuseum.helpdesk.domain
 
-import com.themindmuseum.helpdesk.EquipmentStatus
-import com.themindmuseum.helpdesk.EquipmentType
+import org.themindmuseum.helpdesk.EquipmentStatus
+import org.themindmuseum.helpdesk.EquipmentType
 
 import java.time.LocalDate
 

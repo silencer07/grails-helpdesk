@@ -1,6 +1,6 @@
 package org.themindmuseum.helpdesk.domain
 
-import com.themindmuseum.helpdesk.Priority
+import org.themindmuseum.helpdesk.Priority
 
 class Employee implements Serializable {
 

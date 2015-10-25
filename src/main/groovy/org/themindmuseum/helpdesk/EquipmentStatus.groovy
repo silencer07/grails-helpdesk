@@ -1,4 +1,4 @@
-package com.themindmuseum.helpdesk
+package org.themindmuseum.helpdesk
 
 /**
  * Created by aldrin on 10/10/15.

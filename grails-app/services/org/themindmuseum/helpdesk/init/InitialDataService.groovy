@@ -1,9 +1,9 @@
 package org.themindmuseum.helpdesk.init
 
-import com.themindmuseum.helpdesk.EquipmentStatus
-import com.themindmuseum.helpdesk.EquipmentType
-import com.themindmuseum.helpdesk.Priority
-import com.themindmuseum.helpdesk.TicketStatus
+import org.themindmuseum.helpdesk.EquipmentStatus
+import org.themindmuseum.helpdesk.EquipmentType
+import org.themindmuseum.helpdesk.Priority
+import org.themindmuseum.helpdesk.TicketStatus
 import grails.transaction.Transactional
 import org.themindmuseum.helpdesk.domain.Department
 import org.themindmuseum.helpdesk.domain.Employee

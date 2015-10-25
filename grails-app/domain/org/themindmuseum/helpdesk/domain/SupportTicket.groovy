@@ -1,6 +1,6 @@
 package org.themindmuseum.helpdesk.domain
 
-import com.themindmuseum.helpdesk.TicketStatus
+import org.themindmuseum.helpdesk.TicketStatus
 
 import java.time.LocalDateTime
 
@@ -34,7 +34,7 @@ abstract class SupportTicket {
     }
 
     static def mustHaveAnAssigneeWhenResolved = { status, instance ->
-        if(TicketStatus.unresolvedStatuses.contains(status) && !instance.assignee){
+        if(status == TicketStatus.RESOLVED && !instance.assignee){
             return 'must.have.assignee.when.resolved'
         }
         return true
