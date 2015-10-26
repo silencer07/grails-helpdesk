@@ -1,12 +1,14 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
+<!DOCTYPE html>
 <html>
 <head>
     <title>Borrow an Asset</title>
     <meta name="layout" content="main"/>
-    <script type="javascript">
+    <script>
         $(document).ready(function(){
-            console.log("hello")
-        })
+            alert("hello");
+        });
+        alert("before hello");
     </script>
 </head>
 <body>
@@ -30,4 +32,5 @@
         </div>
     </div>
 </body>
+
 </html>
