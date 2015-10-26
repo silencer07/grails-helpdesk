@@ -6,9 +6,9 @@
     <meta name="layout" content="main"/>
     <script>
         $(document).ready(function(){
-            alert("hello");
+            applyDateTimePickerStyle('borrowDate');
+            applyDateTimePickerStyle('returningDate');
         });
-        alert("before hello");
     </script>
 </head>
 <body>
