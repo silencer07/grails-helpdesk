@@ -23,7 +23,7 @@ abstract class SupportTicket {
         resolutionNotes nullable: true, maxSize: 4 * 1024 * 1024 //4GB of data here
         timeReopened nullable: true
         timeResolved nullable: true
-        assignee nullable: true
+        assignee nullable: true, validator: assigneeShouldNotBeTheSamePerson
     }
 
     static belongsTo = [reportedBy: Employee, assignee: Employee]
@@ -32,4 +32,16 @@ abstract class SupportTicket {
         tablePerConcreteClass true
         resolutionNotes lazy: true //needs to be lazy-loaded since it is a huge file
     }
+
+    static def mustBeGreaterThanOrEqualToday = { date ->
+        return date ? LocalDateTime.now().compareTo(date) <= 0 : true
+    }
+
+    static def assigneeShouldNotBeTheSamePerson =  { assignee, instance ->
+        if(assignee?.id == instance.reportedBy?.id){
+            return 'assignee.should.not.be.the.same.person'
+        }
+        return true
+    }
+
 }
