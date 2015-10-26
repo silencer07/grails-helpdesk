@@ -16,7 +16,7 @@ abstract class SupportTicket {
 
     static constraints = {
         timeFiled nullabe:false
-        subject size:1..200
+        subject nullable: false, size:1..200
         description nullable: true, maxSize:1000
         status nullable:false
         reportedBy nullable:false

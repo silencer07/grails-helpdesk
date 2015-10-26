@@ -7,10 +7,29 @@ class AssetBorrowing extends SupportTicket{
     LocalDateTime borrowedDate
     LocalDateTime returningDate
     LocalDateTime returnedDate
+    boolean assetLent = false
 
     static constraints = {
-        //TODO borrowedDate >= returningDate
-        equipments nullable: false, minSize: 1
+        equipments nullable: true, validator: mustHaveAtLeastOneEquipment
+        borrowedDate nullable: false
+        returningDate nullable: false, validator: mustBeLaterThanBorrowedDate
+        returnedDate nullable: true, validator: mustBeLaterThanBorrowedDate
+    }
+
+    static def mustBeLaterThanBorrowedDate = { date, instance ->
+        if(instance.borrowedDate && date){
+            if(returningDate.compareTo(instance.borrowedDate) < 0){
+                return 'must.be.greater.than.borrowed.date'
+            }
+        }
+        return true
+    }
+
+    static def mustHaveAtLeastOneEquipment = { equipments, instance ->
+        if(instance.assentLent && !equipments){
+            return 'must.lend.at.least.one.equipment'
+        }
+        return true
     }
 
     static hasMany = [equipments : Equipment]
