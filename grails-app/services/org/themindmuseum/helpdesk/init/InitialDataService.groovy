@@ -5,6 +5,7 @@ import org.themindmuseum.helpdesk.EquipmentType
 import org.themindmuseum.helpdesk.Priority
 import org.themindmuseum.helpdesk.TicketStatus
 import grails.transaction.Transactional
+import org.themindmuseum.helpdesk.domain.AssetBorrowing
 import org.themindmuseum.helpdesk.domain.Department
 import org.themindmuseum.helpdesk.domain.Employee
 import org.themindmuseum.helpdesk.domain.EmployeeRole
@@ -34,6 +35,7 @@ class InitialDataService {
         initializeVendors()
         initializeEquipments()
         initializeIncidents()
+        initializeAssetBorrowings()
     }
 
     def initializeDepartments(){
@@ -135,7 +137,7 @@ class InitialDataService {
         projector.vendor = Vendor.findByName("PC Express");
         projector.serviceTag = "PC Peripherals"
         projector.serialNumber = "PROJ001"
-        projector.status = EquipmentStatus.BORROWED //for 1 of the events
+        projector.status = EquipmentStatus.AVAILABLE //for 1 of the events
         projector.type = EquipmentType.EXHIBIT_APPARATUS
         projector.datePurchased =  LocalDate.now()
         projector.warrantyEndDate = projector.datePurchased.plusDays(365 * 2)
@@ -148,7 +150,7 @@ class InitialDataService {
         keyboard.vendor = Vendor.findByName("PC Express");
         keyboard.serviceTag = "Keyboard"
         keyboard.serialNumber = "KEYB001"
-        keyboard.status = EquipmentStatus.AVAILABLE
+        keyboard.status = EquipmentStatus.BORROWED
         keyboard.type = EquipmentType.PC_PARTS
         keyboard.datePurchased =  LocalDate.now()
         keyboard.warrantyEndDate = keyboard.datePurchased.plusDays(365)
@@ -211,5 +213,31 @@ class InitialDataService {
         closedIncident.reportedBy = reportedBy
         closedIncident.assignee = Employee.findByEmail('mrivero@themindmuseum.org')
         closedIncident.save()
+    }
+
+    def initializeAssetBorrowings(){
+        def reportedBy = Employee.findByEmail('atingson@themindmuseum.org')
+
+        def openAssetBorrowing= new AssetBorrowing()
+        openAssetBorrowing.subject = "Need MacBook Pro and Projector"
+        openAssetBorrowing.description = "I will use it for client demo"
+        openAssetBorrowing.status = TicketStatus.OPEN
+        openAssetBorrowing.reportedBy = reportedBy
+        openAssetBorrowing.borrowedDate = LocalDateTime.now()
+        openAssetBorrowing.returningDate = LocalDateTime.now().plusDays(10)
+        openAssetBorrowing.save()
+
+        def resolvedAssetBorrowing= new AssetBorrowing()
+        resolvedAssetBorrowing.addToEquipments(Equipment.findBySerialNumber('KEYB001'))
+        resolvedAssetBorrowing.subject = "Need external keyboard"
+        resolvedAssetBorrowing.status = TicketStatus.RESOLVED
+        resolvedAssetBorrowing.timeFiled = LocalDateTime.now().minusDays(1)
+        resolvedAssetBorrowing.timeResolved = LocalDateTime.now()
+        resolvedAssetBorrowing.reportedBy = reportedBy
+        resolvedAssetBorrowing.assignee = Employee.findByEmail('mrivero@themindmuseum.org')
+        resolvedAssetBorrowing.borrowedDate = LocalDateTime.now()
+        resolvedAssetBorrowing.returningDate = LocalDateTime.now().plusDays(10)
+        resolvedAssetBorrowing.assetLent = true
+        resolvedAssetBorrowing.save()
     }
 }

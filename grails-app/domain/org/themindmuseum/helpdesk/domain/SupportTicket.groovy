@@ -33,8 +33,9 @@ abstract class SupportTicket {
         resolutionNotes lazy: true //needs to be lazy-loaded since it is a huge file
     }
 
-    static def mustBeGreaterThanOrEqualToday = { date ->
-        return date ? LocalDateTime.now().compareTo(date) <= 0 : true
+    static def mustBeGreaterThanOrEqualThisTime = { LocalDateTime date, instance ->
+        //It's minus 1 minute since LocalDateTime.now() will always return different time
+        return date ?  date.compareTo(LocalDateTime.now().minusMinutes(1)) >= 0 : true
     }
 
     static def assigneeShouldNotBeTheSamePerson =  { assignee, instance ->

@@ -22,7 +22,7 @@
                             <tr>
                                 <td><g:link action="details" id="${incident.id}">${incident.subject}</g:link></td>
                                 <td><g:formatDate date="${timeFiledDate}" format="MM/dd/yyyy"/></td>
-                                <td><g:formatDate date="${timeFiledDate}" format="mm:ss"/></td>
+                                <td><g:formatDate date="${timeFiledDate}" format="hh:mm"/></td>
                                 <td>${incident.status}</td>
                             </tr>
                         </g:each>
