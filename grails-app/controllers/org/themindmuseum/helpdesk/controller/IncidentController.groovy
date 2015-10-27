@@ -19,7 +19,7 @@ class IncidentController {
         def incidents = Incident
             .findAllByReportedByAndStatusInList(employee, TicketStatus.unresolvedStatuses)
             .sort {a,b -> b.timeFiled <=> a.timeFiled}
-        render view : 'incidents', model: [incidents : incidents]
+        render view : 'myIncidents', model: [incidents : incidents]
     }
 
     @Secured(["hasAnyRole('IT', 'EMPLOYEE')"])
@@ -28,7 +28,7 @@ class IncidentController {
         def incidents = Incident
             .findAllByReportedByAndStatus(employee, TicketStatus.RESOLVED)
             .sort {a,b -> b.timeFiled <=> a.timeFiled}
-        render view : 'incidents', model: [incidents : incidents]
+        render view : 'myIncidents', model: [incidents : incidents]
     }
 
     @Secured(["hasAnyRole('IT', 'EMPLOYEE')"])
