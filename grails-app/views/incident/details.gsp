@@ -12,7 +12,7 @@
         <g:set var="timeFiledDate" value="${DateUtils.asDate(incident?.timeFiled)}"/>
         Subject : ${incident?.subject} <br/>
         Date : <g:formatDate date="${timeFiledDate}" format="MM/dd/yyyy"/> <br/>
-        Time : <g:formatDate date="${timeFiledDate}" format="mm:ss"/> <br/>
+        Time : <g:formatDate date="${timeFiledDate}" format="mm:ss a"/> <br/>
         Equipment : ${incident?.equipment.name} <br/>
         Manufacturer : ${incident?.equipment.manufacturer} <br/>
         Serial No. : ${incident?.equipment.serialNumber} <br/>

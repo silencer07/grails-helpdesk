@@ -6,11 +6,10 @@ import org.themindmuseum.helpdesk.command.AssetBorrowingIntentCommand
 import org.themindmuseum.helpdesk.domain.AssetBorrowing
 import org.themindmuseum.helpdesk.utils.DateUtils
 
-class BorrowController {
+class BorrowController extends SupportTicketController{
 
-    static allowedMethods = [saveAssetBorrowingIntent: 'POST']
-
-    def springSecurityService
+    static allowedMethods = [saveAssetBorrowingIntent: 'POST', additionalNotes : 'POST',
+         resolveAssetBorrowing: 'POST', reopenAssetBorrowing: 'POST', markAssetLent: 'POST']
 
     @Secured(["hasAnyRole('IT', 'EMPLOYEE')"])
     def index() {}
@@ -56,16 +55,38 @@ class BorrowController {
         return [assetBorrowings : assetBorrowings]
     }
 
+    @Secured(["hasAnyRole('IT', 'EMPLOYEE')"])
+    def addAdditionalNotes(){
+        addAdditionalNotes(params.assetBorrowingId?.toLong(), AssetBorrowing, 'myAssetBorrowingIntents', 'details')
+    }
+
+    @Secured(["hasAnyRole('IT', 'EMPLOYEE')"])
+    def resolveAssetBorrowing(){
+        resolveSupportTicket(params.assetBorrowingId?.toLong(), AssetBorrowing,
+                'myAssetBorrowingIntents', 'myAssetBorrowings')
+    }
+
+    @Secured(["hasAnyRole('IT', 'EMPLOYEE')"])
+    def reopenAssetBorrowing(){
+        reopenSupportTicket(params.assetBorrowingId?.toLong(), AssetBorrowing,
+                'myAssetBorrowingIntents', 'myAssetBorrowings')
+    }
+
+    @Secured(["hasAnyRole('IT', 'EMPLOYEE')"])
+    def markAssetLent(){
+        def assetBorrowing = AssetBorrowing.findByIdAndReportedBy(
+            params.assetBorrowingId?.toLong(), springSecurityService.currentUser)
+        if(assetBorrowing){
+            assetBorrowing.assetLent = !assetBorrowing.assetLent
+            redirect(action: 'details', id: assetBorrowing.id)
+            return
+        }
+        redirect(action: 'myAssetBorrowings')
+    }
+
     /**
      * TODO:
-     * additional notes functionality
-     * resolve borrowing
-     * mark/unmark as fulfilled
      * dividing myAssetBorrowing between present/future and past borrowings
      * marking intents/assetBorrowings as red if they are about to lapse
-     * abstract SupportTicketController that handles common scenarios like:
-     *  reopening
-     *  closing
-     *  adding additional notes
      */
 }

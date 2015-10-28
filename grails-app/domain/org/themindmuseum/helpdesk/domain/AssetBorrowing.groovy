@@ -11,7 +11,7 @@ class AssetBorrowing extends SupportTicket{
 
     static constraints = {
         equipments nullable: true, validator: mustHaveAtLeastOneEquipment
-        borrowedDate nullable: false, validator: mustBeGreaterThanOrEqualThisTime
+        borrowedDate nullable: false
         returningDate nullable: false, validator: mustBeLaterThanBorrowedDate
         returnedDate nullable: true, validator: mustBeLaterThanBorrowedDate
     }

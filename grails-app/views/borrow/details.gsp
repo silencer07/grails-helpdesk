@@ -10,13 +10,13 @@
 <div>
     <div>
         Subject : ${assetBorrowing?.subject} <br/>
-        Time Filed : <g:formatDate date="${DateUtils.asDate(assetBorrowing?.timeFiled)}" format="MM/dd/yyyy hh:mm"/> <br/>
-        Borrow Time : <g:formatDate date="${DateUtils.asDate(assetBorrowing?.borrowedDate)}" format="MM/dd/yyyy hh:mm"/> <br/>
-        Returning Time : <g:formatDate date="${DateUtils.asDate(assetBorrowing?.returningDate)}" format="MM/dd/yyyy hh:mm"/> <br/>
+        Time Filed : <g:formatDate date="${DateUtils.asDate(assetBorrowing?.timeFiled)}" format="MM/dd/yyyy hh:mm a"/> <br/>
+        Borrow Time : <g:formatDate date="${DateUtils.asDate(assetBorrowing?.borrowedDate)}" format="MM/dd/yyyy hh:mm a"/> <br/>
+        Returning Time : <g:formatDate date="${DateUtils.asDate(assetBorrowing?.returningDate)}" format="MM/dd/yyyy hh:mm a"/> <br/>
         Borrowing Request Fulfilled : <g:formatBoolean boolean="${assetBorrowing.assetLent}" true="Yes" false="No"/> <br/>
         <g:if test="${assetBorrowing?.assetLent}">
             Returned Time : <g:formatDate date="${assetBorrowing?.returnedDate ? DateUtils.asDate(assetBorrowing?.returnedDate) : null}"
-                                  format="MM/dd/yyyy hh:mm"/> <br/>
+                                  format="MM/dd/yyyy hh:mm a"/> <br/>
             <g:if test="${assetBorrowing?.equipments}">
                 <table>
                     <thead>
@@ -50,7 +50,9 @@
             <g:else>
                 <g:actionSubmit value="Reopen Borrowing Request" action="reopenAssetBorrowing"/>
             </g:else>
-            <g:actionSubmit value="Mark/Unmark Borrow Request as Fulfilled" action="markAssetLent"/>
+            <g:if test="${assetBorrowing?.equipments}">
+                <g:actionSubmit value="Mark/Unmark Borrow Request as Fulfilled" action="markAssetLent"/>
+            </g:if>
         </g:form>
     </div>
 </div>

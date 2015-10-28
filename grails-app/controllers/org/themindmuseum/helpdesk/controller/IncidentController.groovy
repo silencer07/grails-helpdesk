@@ -7,6 +7,8 @@ import sun.security.krb5.internal.Ticket
 
 class IncidentController extends SupportTicketController{
 
+    static allowedMethods = [addAdditionalNotes: 'POST', resolveIncident: 'POST', reopenIncident: 'POST']
+
     def index() {}
 
     @Secured(["hasAnyRole('IT', 'EMPLOYEE')"])

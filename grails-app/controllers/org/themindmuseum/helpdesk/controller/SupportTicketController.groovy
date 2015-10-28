@@ -6,7 +6,7 @@ import org.themindmuseum.helpdesk.domain.SupportTicket
 
 abstract class SupportTicketController {
 
-    static allowedMethods = [addAdditionalNotes: 'POST', resolveIncident: 'POST', reopenIncident: 'POST']
+    static allowedMethods = [addAdditionalNotes: 'POST', resolveSupportTicket: 'POST', reopenSupportTicket: 'POST']
 
     def springSecurityService
 
