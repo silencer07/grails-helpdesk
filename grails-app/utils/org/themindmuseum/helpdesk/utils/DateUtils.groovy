@@ -31,7 +31,7 @@ public class DateUtils {
     public static def tryParseLocalDateTimeFromDateTimePicker(String date){
         try{
             //10/21/2015 12:00 pm
-            return LocalDateTime.parse(date.toUpperCase(), DateTimeFormatter.ofPattern(DEFAULT_JQUERY_DATETIME_PICKER_FORMAT));
+            return date ? LocalDateTime.parse(date?.toUpperCase(), DateTimeFormatter.ofPattern(DEFAULT_JQUERY_DATETIME_PICKER_FORMAT)) : null;
         }catch (DateTimeParseException e){
             e.printStackTrace()
             return null
