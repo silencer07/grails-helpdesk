@@ -13,6 +13,7 @@
         Time Filed : <g:formatDate date="${DateUtils.asDate(assetBorrowing?.timeFiled)}" format="MM/dd/yyyy hh:mm a"/> <br/>
         Borrow Time : <g:formatDate date="${DateUtils.asDate(assetBorrowing?.borrowedDate)}" format="MM/dd/yyyy hh:mm a"/> <br/>
         Returning Time : <g:formatDate date="${DateUtils.asDate(assetBorrowing?.returningDate)}" format="MM/dd/yyyy hh:mm a"/> <br/>
+        Status : ${assetBorrowing.status} <br />
         Borrowing Request Fulfilled : <g:formatBoolean boolean="${assetBorrowing.assetLent}" true="Yes" false="No"/> <br/>
         <g:if test="${assetBorrowing?.assetLent}">
             Returned Time : <g:formatDate date="${assetBorrowing?.returnedDate ? DateUtils.asDate(assetBorrowing?.returnedDate) : null}"
@@ -28,6 +29,22 @@
                         <tr>
                             <td>${equipment.name}</td>
                             <td>${equipment.serialNumber}</td>
+                        </tr>
+                    </g:each>
+                    </tbody>
+                </table>
+            </g:if>
+            <g:if test="${assetBorrowing?.supportStaff}">
+                <table>
+                    <thead>
+                    <th>Name</th>
+                    <th>Email</th>
+                    </thead>
+                    <tbody>
+                    <g:each in="${assetBorrowing?.supportStaff}" var="staff">
+                        <tr>
+                            <td>${staff.fullName}</td>
+                            <td>${staff.email}</td>
                         </tr>
                     </g:each>
                     </tbody>

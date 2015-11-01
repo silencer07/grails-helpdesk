@@ -7,7 +7,7 @@ class EventSupport extends SupportTicket{
     LocalDateTime startTime
     LocalDateTime endTime
     String venue
-    boolean resourceIssued
+    boolean resourceIssued = false
 
     static constraints = {
         startTime nullable: false

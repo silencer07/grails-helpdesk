@@ -10,6 +10,9 @@ import org.themindmuseum.helpdesk.utils.DateUtils
 
 class EventSupportController extends SupportTicketController{
 
+    static allowedMethods = [saveEventSupportIntent: 'POST', additionalNotes : 'POST',
+                             resolveEventSupport: 'POST', reopenEventSupport: 'POST', markResourceAllocated: 'POST']
+
     @Secured(["hasAnyRole('IT', 'EMPLOYEE')"])
     def index() {}
 
@@ -34,7 +37,54 @@ class EventSupportController extends SupportTicketController{
     @Secured(["hasAnyRole('IT', 'EMPLOYEE')"])
     def myEventSupportIntents(){
         def employee = springSecurityService.currentUser
-        def intents = EventSupport.findAllByReportedByAndStatusAndResourceIssued(employee, TicketStatus.OPEN, false, [sortBy: 'timeFiled'])
+        def intents = EventSupport.findAllByStatusAndResourceIssuedAndReportedBy(TicketStatus.OPEN, false, employee, [sortBy: 'timeFiled'])
         return [intents : intents]
+    }
+
+    @Secured(["hasAnyRole('IT', 'EMPLOYEE')"])
+    def details(long id) {
+        def employee = springSecurityService.currentUser
+        def eventSupport = EventSupport.findByIdAndReportedBy(id, employee)
+        if(eventSupport){
+            return [eventSupport : eventSupport]
+        } else {
+            redirect action: 'myEventSupportIntents'
+        }
+    }
+
+    @Secured(["hasAnyRole('IT', 'EMPLOYEE')"])
+    def addAdditionalNotes(){
+        addAdditionalNotes(params.eventSupportId?.toLong(), EventSupport, 'myEventSupportIntents', 'details')
+    }
+
+    @Secured(["hasAnyRole('IT', 'EMPLOYEE')"])
+    def resolveEventSupport(){
+        resolveSupportTicket(params.eventSupportId?.toLong(), EventSupport,
+                'myEventSupportIntents', 'myEventSupports')
+    }
+
+    @Secured(["hasAnyRole('IT', 'EMPLOYEE')"])
+    def reopenEventSupport(){
+        reopenSupportTicket(params.eventSupportId?.toLong(), EventSupport,
+                'myEventSupportIntents', 'myEventSupports')
+    }
+
+    @Secured(["hasAnyRole('IT', 'EMPLOYEE')"])
+    def markResourceAllocated(){
+        def eventSupport = EventSupport.findByIdAndReportedBy(
+                params.eventSupportId?.toLong(), springSecurityService.currentUser)
+        if(eventSupport){
+            eventSupport.resourceIssued = !eventSupport.resourceIssued
+            redirect(action: 'details', id: eventSupport.id)
+            return
+        }
+        redirect(action: 'myEventSupports')
+    }
+
+    @Secured(["hasAnyRole('IT', 'EMPLOYEE')"])
+    def myEventSupports(){
+        def employee = springSecurityService.currentUser
+        def eventSupports = EventSupport.findAllByReportedByAndStatus(employee, TicketStatus.RESOLVED, [sortBy : 'startTime'])
+        return [eventSupports : eventSupports]
     }
 }

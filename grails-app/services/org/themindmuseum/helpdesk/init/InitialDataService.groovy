@@ -10,6 +10,7 @@ import org.themindmuseum.helpdesk.domain.Department
 import org.themindmuseum.helpdesk.domain.Employee
 import org.themindmuseum.helpdesk.domain.EmployeeRole
 import org.themindmuseum.helpdesk.domain.Equipment
+import org.themindmuseum.helpdesk.domain.EventSupport
 import org.themindmuseum.helpdesk.domain.Incident
 import org.themindmuseum.helpdesk.domain.Role
 import org.themindmuseum.helpdesk.domain.Vendor
@@ -36,6 +37,7 @@ class InitialDataService {
         initializeEquipments()
         initializeIncidents()
         initializeAssetBorrowings()
+        initializeEventSupport()
     }
 
     def initializeDepartments(){
@@ -239,5 +241,35 @@ class InitialDataService {
         resolvedAssetBorrowing.returningDate = LocalDateTime.now().plusDays(10)
         resolvedAssetBorrowing.assetLent = true
         resolvedAssetBorrowing.save()
+    }
+
+    def initializeEventSupport(){
+        def reportedBy = Employee.findByEmail('atingson@themindmuseum.org')
+
+        def openEventSupport = new EventSupport()
+        openEventSupport.subject = "Particle Physics Exhibition"
+        openEventSupport.description = "I need Large Hadron Collider and one Support staff."
+        openEventSupport.venue = "Albert Einstein Auditorium"
+        openEventSupport.startTime = LocalDateTime.now().plusDays(2)
+        openEventSupport.endTime = openEventSupport.startTime.plusHours(5)
+        openEventSupport.status = TicketStatus.OPEN
+        openEventSupport.resourceIssued = false
+        openEventSupport.reportedBy = reportedBy
+        openEventSupport.save(failOnError : true)
+
+        def techSupport = Employee.findByEmail('mrivero@themindmuseum.org')
+        def resolvedEventSupport = new EventSupport()
+        resolvedEventSupport.subject = "Electro Magnetism Exhibit"
+        resolvedEventSupport.description = "I need Tesla Coil and one Support staff."
+        resolvedEventSupport.venue = "Albert Einstein Auditorium"
+        resolvedEventSupport.startTime = LocalDateTime.now().plusDays(1)
+        resolvedEventSupport.endTime = resolvedEventSupport.startTime.plusHours(5)
+        resolvedEventSupport.resourceIssued = true
+        resolvedEventSupport.status = TicketStatus.RESOLVED
+        resolvedEventSupport.addToEquipments(Equipment.findBySerialNumber("TESLA001"))
+        resolvedEventSupport.reportedBy = reportedBy
+        resolvedEventSupport.assignee = techSupport
+        resolvedEventSupport.addToSupportStaff(techSupport)
+        resolvedEventSupport.save()
     }
 }

@@ -16,6 +16,7 @@
         Equipment : ${incident?.equipment.name} <br/>
         Manufacturer : ${incident?.equipment.manufacturer} <br/>
         Serial No. : ${incident?.equipment.serialNumber} <br/>
+        Status : ${incident?.status} <br/>
         Concern : <br/>
             <textArea readonly="true">${incident?.description}</textArea>
         notes:
