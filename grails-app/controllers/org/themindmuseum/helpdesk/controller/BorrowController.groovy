@@ -51,7 +51,7 @@ class BorrowController extends SupportTicketController{
     @Secured(["hasAnyRole('IT', 'EMPLOYEE')"])
     def myAssetBorrowings(){
         def employee = springSecurityService.currentUser
-        def assetBorrowings = AssetBorrowing.findAllByReportedByAndStatus(employee, TicketStatus.RESOLVED, [sortBy : 'returningDate'])
+        def assetBorrowings = AssetBorrowing.findAllByReportedByAndStatus(employee, TicketStatus.RESOLVED, [sort : 'returningDate'])
         return [assetBorrowings : assetBorrowings]
     }
 

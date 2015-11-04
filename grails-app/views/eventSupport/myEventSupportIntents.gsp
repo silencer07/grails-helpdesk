@@ -23,7 +23,7 @@
                     <tr>
                         <td><g:link action="details" id="${intent.id}">${intent.subject}</g:link></td>
                         <td><g:formatDate date="${timeFiledDate}" format="MM/dd/yyyy"/></td>
-                        <td><g:formatDate date="${timeFiledDate}" format="hh:mm"/></td>
+                        <td><g:formatDate date="${timeFiledDate}" format="hh:mm a"/></td>
                         <td>${intent.status}</td>
                     </tr>
                 </g:each>

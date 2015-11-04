@@ -20,8 +20,8 @@
             <g:each in="${assetBorrowings}" var="assetBorrowing">
                 <tr>
                     <td><g:link action="details" id="${assetBorrowing.id}">${assetBorrowing.subject}</g:link></td>
-                    <td><g:formatDate date="${DateUtils.asDate(assetBorrowing.timeFiled)}" format="MM/dd/yyyy hh:mm"/></td>
-                    <td><g:formatDate date="${DateUtils.asDate(assetBorrowing.returningDate)}" format="MM/dd/yyyy hh:mm"/></td>
+                    <td><g:formatDate date="${DateUtils.asDate(assetBorrowing.timeFiled)}" format="MM/dd/yyyy hh:mm a"/></td>
+                    <td><g:formatDate date="${DateUtils.asDate(assetBorrowing.returningDate)}" format="MM/dd/yyyy hh:mm a"/></td>
                 </tr>
             </g:each>
             </tbody>

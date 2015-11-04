@@ -8,6 +8,7 @@ class AssetBorrowing extends SupportTicket{
     LocalDateTime returningDate
     LocalDateTime returnedDate
     boolean assetLent = false
+    boolean assetReturned = false
 
     static constraints = {
         equipments nullable: true, validator: mustHaveAtLeastOneEquipment
