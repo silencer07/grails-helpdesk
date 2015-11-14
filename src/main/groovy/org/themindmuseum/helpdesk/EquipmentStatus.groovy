@@ -11,4 +11,13 @@ enum EquipmentStatus {
     DISPOSED,
     MISSING,
     WITH_DAMAGE
+
+    static def statusesForSupportTickets(){
+        return [
+            ON_HOLD,
+            DISPOSED,
+            MISSING,
+            WITH_DAMAGE
+        ]
+    }
 }

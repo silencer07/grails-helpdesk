@@ -1,0 +1,50 @@
+<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page import="org.themindmuseum.helpdesk.utils.DateUtils" %>
+<%@ page import="org.themindmuseum.helpdesk.TicketStatus" %>
+<%@ page import="org.themindmuseum.helpdesk.EquipmentStatus" %>
+<html>
+<head>
+    <title>Incident Details</title>
+</head>
+<body>
+<h1>Incident Details</h1>
+<div>
+    <div>
+        <g:set var="timeFiledDate" value="${DateUtils.asDate(incident?.timeFiled)}"/>
+        Subject : ${incident?.subject} <br/>
+        Date : <g:formatDate date="${timeFiledDate}" format="MM/dd/yyyy"/> <br/>
+        Time : <g:formatDate date="${timeFiledDate}" format="mm:ss a"/> <br/>
+        Equipment : ${incident?.equipment.name} <br/>
+        Manufacturer : ${incident?.equipment.manufacturer} <br/>
+        Serial No. : ${incident?.equipment.serialNumber} <br/>
+        Status : ${incident?.status} <br/>
+        Concern : <br/>
+            <textArea readonly="true">${incident?.description}</textArea><br/>
+        notes:<br/>
+            <textArea readonly="true">${incident?.resolutionNotes}</textArea>
+
+        <g:form method="post">
+            <g:hiddenField name="incidentId" value="${incident?.id}"/>
+            <g:if test="${incident?.status == TicketStatus.OPEN}">
+                Add additional notes: <br/>
+                <g:textArea name="additionalNotes"/> <br/>
+                <g:actionSubmit value="Add Notes" action="addAdditionalNotes"/> <br/>
+                Assign Ticket : <g:select name="assignee" from="${itStaff}" optionKey="email" optionValue="fullName"/><br/>
+                Change Tag: <g:select name="status" from="${EquipmentStatus.statusesForSupportTickets()}"
+                                 noSelection="['':'Do not Change']"/><br/>
+                Equipment History: <br/>
+                <textArea readonly="true">${incident?.equipment.notes}</textArea><br/>
+                Add history: <br/>
+                <g:textArea name="equipmentHistoryNotes"/><br/>
+                <g:actionSubmit value="Save Changes" action="saveIncidentChanges"/>
+                <g:actionSubmit value="Resolve Incident" action="resolveIncident"/>
+            </g:if>
+            <g:else>
+                <!-- readOnly lang ng nasa taas-->
+                <g:actionSubmit value="Reopen Incident" action="reopenIncident"/>
+            </g:else>
+        </g:form>
+    </div>
+</div>
+</body>
+</html>
