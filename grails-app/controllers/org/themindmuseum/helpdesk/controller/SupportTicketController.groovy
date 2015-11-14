@@ -2,7 +2,6 @@ package org.themindmuseum.helpdesk.controller
 
 import grails.plugin.springsecurity.annotation.Secured
 import org.themindmuseum.helpdesk.TicketStatus
-import org.themindmuseum.helpdesk.domain.SupportTicket
 
 abstract class SupportTicketController {
 
@@ -16,11 +15,10 @@ abstract class SupportTicketController {
         if(supportTicket){
             if(params.additionalNotes){
                 def employee = springSecurityService.loadCurrentUser()
-                supportTicket.resolutionNotes =
-                        """${employee.firstName} ${employee.lastName} : \n
+                supportTicket.resolutionNotes = """
+                   | ${employee.fullName} : \n
                    | ${params.additionalNotes} \n
-                   |""".stripMargin().stripIndent() +
-                    supportTicket.resolutionNotes
+                   | ${supportTicket.resolutionNotes}""".stripMargin().stripIndent()
                 supportTicket.save()
             }
             redirect(action: successAction, id: supportTicket.id)

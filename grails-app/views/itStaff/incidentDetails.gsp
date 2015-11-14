@@ -32,10 +32,9 @@
             <g:if test="${incident?.status == TicketStatus.OPEN}">
                 Add additional notes: <br/>
                 <g:textArea name="additionalNotes"/> <br/>
-                <g:actionSubmit value="Add Notes" action="addAdditionalNotes"/> <br/>
                 Assign Ticket : <g:select name="assignee" from="${itStaff}" optionKey="email" optionValue="fullName"
                                       noSelection='["${sec.username(null, null)}":"Assign to me"]' value="${incident?.assignee?.email}"/><br/>
-                Change equipment status: <g:select name="status" from="${EquipmentStatus.statusesForSupportTickets()}"
+                Change equipment status: <g:select name="equipmentStatus" from="${EquipmentStatus.statusesForSupportTickets()}"
                                  noSelection="['':'Do not Change']"/><br/>
                 Equipment History: <br/>
                 <textArea readonly="true">${incident?.equipment.notes}</textArea><br/>

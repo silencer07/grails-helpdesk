@@ -2,6 +2,7 @@ package org.themindmuseum.helpdesk.controller
 
 import grails.plugin.springsecurity.annotation.Secured
 import org.apache.commons.lang.ClassUtils
+import org.themindmuseum.helpdesk.EquipmentStatus
 import org.themindmuseum.helpdesk.TicketStatus
 import org.themindmuseum.helpdesk.domain.AssetBorrowing
 import org.themindmuseum.helpdesk.domain.Employee
@@ -62,28 +63,32 @@ class ItStaffController {
     }
 
     @Secured(["hasAnyRole('EMPLOYEE')"])
-    def addAdditionalNotes(){
-        def supportTicket = getSupportTicket(params.id.toLong(), ClassUtils.getClass(params.clazz))
-        if(supportTicket){
+    def saveIncidentChanges(){
+        def employee = springSecurityService.loadCurrentUser()
+        def incident = Incident.findByIdAndReportedByNotEquals(params.id.toLong(), employee)
+        if(incident){
             if(params.additionalNotes){
-                def employee = springSecurityService.loadCurrentUser()
-                supportTicket.resolutionNotes =
-                        """${employee.fullName} : \n
-                   | ${params.additionalNotes} \n
-                   |""".stripMargin().stripIndent() +
-                    supportTicket.resolutionNotes
-                supportTicket.assignee = Employee.findByEmail(params.assignee)
-                supportTicket.save()
+                incident.resolutionNotes = """
+                   |${employee.fullName} : \n
+                   |${params.additionalNotes} \n
+                   |${incident.resolutionNotes}""".stripMargin().stripIndent()
+                incident.assignee = Employee.findByEmail(params.assignee)
+                incident.save()
             }
-            redirect(action: params.successAction, id: supportTicket.id)
+
+            def equipment = incident.equipment
+            if(params.equipmentHistoryNotes){
+                equipment.notes = """
+                   |${employee.fullName} : \n
+                   |${params.equipmentHistoryNotes} \n
+                   |${equipment.notes}""".stripMargin().stripIndent()
+            }
+            equipment.status = params.equipmentStatus ? EquipmentStatus.valueOf(params.equipmentStatus) : equipment.status
+            equipment.save()
+            redirect(action: params.successAction, id: incident.id)
         } else {
             redirect action : params.failAction
         }
-    }
-
-    private def getSupportTicket(long id, Class clazz) {
-        def employee = springSecurityService.currentUser
-        return clazz.findByIdAndReportedByNotEqual(id, employee)
     }
     //save changes
     //resolve incident
