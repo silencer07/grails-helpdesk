@@ -12,6 +12,8 @@ import org.themindmuseum.helpdesk.domain.Role
 
 class ItStaffController {
 
+    static allowedMethods = [index: ['GET', 'POST'], saveIncidentChanges: 'POST', openCloseIncident: 'POST']
+
     def springSecurityService
 
     @Secured(["hasAnyRole('IT')"])
@@ -90,6 +92,14 @@ class ItStaffController {
             redirect action : params.failAction
         }
     }
-    //save changes
-    //resolve incident
+
+    @Secured(["hasAnyRole('EMPLOYEE')"])
+    def openCloseIncident(){
+        def employee = springSecurityService.loadCurrentUser()
+        def incident = Incident.findByIdAndReportedByNotEquals(params.id.toLong(), employee)
+        if(incident){
+            incident.status = incident.status == TicketStatus.OPEN ? TicketStatus.RESOLVED : TicketStatus.OPEN
+        }
+        saveIncidentChanges()
+    }
 }

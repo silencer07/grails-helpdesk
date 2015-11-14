@@ -41,14 +41,14 @@
                 Add history: <br/>
                 <g:textArea name="equipmentHistoryNotes"/><br/>
                 <g:actionSubmit value="Save Changes" action="saveIncidentChanges"/>
-                <g:actionSubmit value="Resolve Incident" action="resolveIncident"/>
+                <g:actionSubmit value="Resolve Incident" action="openCloseIncident"/>
             </g:if>
             <g:else>
-                Ticket Assignee: ${incident?.assignee}
-                Equipment status: ${incident.equipment.status}
+                Ticket Assignee: ${incident?.assignee.fullName} <br/>
+                Equipment status: ${incident.equipment.status} <br/>
                 Equipment History: <br/>
                 <textArea readonly="true">${incident?.equipment.notes}</textArea><br/>
-                <g:actionSubmit value="Reopen Incident" action="reopenIncident"/>
+                <g:actionSubmit value="Reopen Incident" action="openCloseIncident"/>
             </g:else>
         </g:form>
     </div>
