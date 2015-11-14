@@ -16,10 +16,11 @@ abstract class SupportTicketController {
         if(supportTicket){
             if(params.additionalNotes){
                 def employee = springSecurityService.loadCurrentUser()
-                supportTicket.resolutionNotes +=
+                supportTicket.resolutionNotes =
                         """${employee.firstName} ${employee.lastName} : \n
                    | ${params.additionalNotes} \n
-                   |""".stripMargin().stripIndent()
+                   |""".stripMargin().stripIndent() +
+                    supportTicket.resolutionNotes
                 supportTicket.save()
             }
             redirect(action: successAction, id: supportTicket.id)
