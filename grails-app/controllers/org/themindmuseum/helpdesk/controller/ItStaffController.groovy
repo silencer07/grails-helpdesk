@@ -1,6 +1,7 @@
 package org.themindmuseum.helpdesk.controller
 
 import grails.plugin.springsecurity.annotation.Secured
+import org.apache.commons.lang.ClassUtils
 import org.themindmuseum.helpdesk.TicketStatus
 import org.themindmuseum.helpdesk.domain.AssetBorrowing
 import org.themindmuseum.helpdesk.domain.Employee
@@ -41,6 +42,7 @@ class ItStaffController {
                         itStaff, TicketStatus.unresolvedStatuses, [sort : 'timeFiled'])
         return modelMap
     }
+
     @Secured(["hasAnyRole('IT')"])
     def incidentDetails(long id) {
         def incident = Incident.findByIdAndReportedByNotEqual(id, springSecurityService.currentUser)
@@ -51,6 +53,7 @@ class ItStaffController {
                         eq('authority', 'IT')
                     }
                 }
+                ne('id', springSecurityService.currentUser.id)
             }
             return [incident : incident, itStaff : itStaff]
         } else {
@@ -58,4 +61,30 @@ class ItStaffController {
         }
     }
 
+    @Secured(["hasAnyRole('EMPLOYEE')"])
+    def addAdditionalNotes(){
+        def supportTicket = getSupportTicket(params.id.toLong(), ClassUtils.getClass(params.clazz))
+        if(supportTicket){
+            if(params.additionalNotes){
+                def employee = springSecurityService.loadCurrentUser()
+                supportTicket.resolutionNotes =
+                        """${employee.fullName} : \n
+                   | ${params.additionalNotes} \n
+                   |""".stripMargin().stripIndent() +
+                    supportTicket.resolutionNotes
+                supportTicket.assignee = Employee.findByEmail(params.assignee)
+                supportTicket.save()
+            }
+            redirect(action: params.successAction, id: supportTicket.id)
+        } else {
+            redirect action : params.failAction
+        }
+    }
+
+    private def getSupportTicket(long id, Class clazz) {
+        def employee = springSecurityService.currentUser
+        return clazz.findByIdAndReportedByNotEqual(id, employee)
+    }
+    //save changes
+    //resolve incident
 }

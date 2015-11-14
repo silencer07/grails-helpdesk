@@ -2,6 +2,7 @@
 <%@ page import="org.themindmuseum.helpdesk.utils.DateUtils" %>
 <%@ page import="org.themindmuseum.helpdesk.TicketStatus" %>
 <%@ page import="org.themindmuseum.helpdesk.EquipmentStatus" %>
+<%@ page import="org.themindmuseum.helpdesk.domain.Incident" %>
 <html>
 <head>
     <title>Incident Details</title>
@@ -24,13 +25,17 @@
             <textArea readonly="true">${incident?.resolutionNotes}</textArea>
 
         <g:form method="post">
-            <g:hiddenField name="incidentId" value="${incident?.id}"/>
+            <g:hiddenField name="id" value="${incident?.id}"/>
+            <g:hiddenField name="clazz" value="${Incident.getName()}"/>
+            <g:hiddenField name="successAction" value="incidentDetails"/>
+            <g:hiddenField name="failAction" value="index"/>
             <g:if test="${incident?.status == TicketStatus.OPEN}">
                 Add additional notes: <br/>
                 <g:textArea name="additionalNotes"/> <br/>
                 <g:actionSubmit value="Add Notes" action="addAdditionalNotes"/> <br/>
-                Assign Ticket : <g:select name="assignee" from="${itStaff}" optionKey="email" optionValue="fullName"/><br/>
-                Change Tag: <g:select name="status" from="${EquipmentStatus.statusesForSupportTickets()}"
+                Assign Ticket : <g:select name="assignee" from="${itStaff}" optionKey="email" optionValue="fullName"
+                                      noSelection='["${sec.username(null, null)}":"Assign to me"]' value="${incident?.assignee?.email}"/><br/>
+                Change equipment status: <g:select name="status" from="${EquipmentStatus.statusesForSupportTickets()}"
                                  noSelection="['':'Do not Change']"/><br/>
                 Equipment History: <br/>
                 <textArea readonly="true">${incident?.equipment.notes}</textArea><br/>
@@ -40,7 +45,10 @@
                 <g:actionSubmit value="Resolve Incident" action="resolveIncident"/>
             </g:if>
             <g:else>
-                <!-- readOnly lang ng nasa taas-->
+                Ticket Assignee: ${incident?.assignee}
+                Equipment status: ${incident.equipment.status}
+                Equipment History: <br/>
+                <textArea readonly="true">${incident?.equipment.notes}</textArea><br/>
                 <g:actionSubmit value="Reopen Incident" action="reopenIncident"/>
             </g:else>
         </g:form>
