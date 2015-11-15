@@ -64,7 +64,7 @@ class ItStaffController {
         }
     }
 
-    @Secured(["hasAnyRole('EMPLOYEE')"])
+    @Secured(["hasAnyRole('IT')"])
     def saveIncidentChanges(){
         def employee = springSecurityService.loadCurrentUser()
         def incident = Incident.findByIdAndReportedByNotEquals(params.id.toLong(), employee)
@@ -93,7 +93,7 @@ class ItStaffController {
         }
     }
 
-    @Secured(["hasAnyRole('EMPLOYEE')"])
+    @Secured(["hasAnyRole('IT')"])
     def openCloseIncident(){
         def employee = springSecurityService.loadCurrentUser()
         def incident = Incident.findByIdAndReportedByNotEquals(params.id.toLong(), employee)
@@ -101,5 +101,15 @@ class ItStaffController {
             incident.status = incident.status == TicketStatus.OPEN ? TicketStatus.RESOLVED : TicketStatus.OPEN
         }
         saveIncidentChanges()
+    }
+
+    @Secured(["hasAnyRole('IT')"])
+    def assetBorrowingDetails(long id){
+        def assetBorrowing = AssetBorrowing.findByIdAndReportedByNotEqual(id, springSecurityService.currentUser)
+        if(assetBorrowing){
+            return [assetBorrowing: assetBorrowing]
+        } else {
+            redirect action : 'index'
+        }
     }
 }

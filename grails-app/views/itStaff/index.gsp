@@ -63,7 +63,7 @@
                         <tbody>
                         <g:each in="${pendingBorrowRequests}" var="borrowRequest">
                             <tr>
-                                <td><g:link action="borrowRequestDetails" id="${borrowRequest.id}">${borrowRequest.subject}</g:link></td>
+                                <td><g:link action="assetBorrowingDetails" id="${borrowRequest.id}">${borrowRequest.subject}</g:link></td>
                                 <td><g:formatDate date="${DateUtils.asDate(borrowRequest.timeFiled)}" format="MM/dd/yyyy hh:mm a"/></td>
                             </tr>
                         </g:each>
@@ -85,7 +85,7 @@
                         <tbody>
                         <g:each in="${approvedBorrowRequests}" var="borrowRequest">
                             <tr>
-                                <td><g:link action="borrowRequestDetails" id="${borrowRequest.id}">${borrowRequest.subject}</g:link></td>
+                                <td><g:link action="assetBorrowingDetails" id="${borrowRequest.id}">${borrowRequest.subject}</g:link></td>
                                 <td><g:formatDate date="${DateUtils.asDate(borrowRequest.timeFiled)}" format="MM/dd/yyyy hh:mm a"/></td>
                             </tr>
                         </g:each>
