@@ -4,6 +4,7 @@ import grails.plugin.springsecurity.annotation.Secured
 import org.apache.commons.lang.ClassUtils
 import org.themindmuseum.helpdesk.EquipmentStatus
 import org.themindmuseum.helpdesk.TicketStatus
+import org.themindmuseum.helpdesk.command.AssetApprovalIntentCommand
 import org.themindmuseum.helpdesk.domain.AssetBorrowing
 import org.themindmuseum.helpdesk.domain.Employee
 import org.themindmuseum.helpdesk.domain.EventSupport
@@ -112,4 +113,47 @@ class ItStaffController {
             redirect action : 'index'
         }
     }
+
+    @Secured(["hasAnyRole('IT')"])
+    def saveAssetBorrowingChanges(AssetApprovalIntentCommand cmd){
+        def employee = springSecurityService.loadCurrentUser()
+        def assetBorrowing = cmd.assetBorrowing
+        if(params.additionalNotes){
+            assetBorrowing.resolutionNotes = """
+                   |${employee.fullName} : \n
+                   |${params.additionalNotes} \n
+                   |${assetBorrowing.resolutionNotes}""".stripMargin().stripIndent()
+        }
+
+        if(cmd.equipments){
+            Iterator<AssetApprovalIntentCommand.AssetApprovalEquipment> iterator =
+                cmd.equipments?.iterator()
+            while(iterator.hasNext()){
+                def assetApprovalEquipment = iterator.next();
+
+                if(!assetApprovalEquipment || !assetApprovalEquipment.serialNumber){
+                    iterator.remove();
+                }
+
+                /*
+                 * validate = false when
+                 * 1. equipment not available
+                 * 2. the borrowing date overlaps with another
+                 *
+                 * TODO
+                 * 1. makr asset lent of the assetBorrowing
+                 */
+                if(assetApprovalEquipment.validate()){
+                    assetBorrowing.addToEquipments(assetApprovalEquipment.equipment)
+                }
+            }
+            assetBorrowing.assignee = employee
+        }
+        assetBorrowing.save()
+        render view : 'assetBorrowingDetails', model : [assetBorrowing : cmd]
+    }
+
+    //resolveAssetBorrowing - with validation
+    //reopenAssetBorrowing - no validation
+    //markAssetLent - with validation
 }

@@ -34,6 +34,8 @@
             Returning Time : <g:formatDate date="${DateUtils.asDate(assetBorrowing?.returningDate)}" format="MM/dd/yyyy hh:mm a"/> <br/>
             Status : ${assetBorrowing.status} <br />
             Borrowing Request Fulfilled : <g:formatBoolean boolean="${assetBorrowing.assetLent}" true="Yes" false="No"/> <br/>
+            Requested by : ${assetBorrowing.reportedBy}
+            Assigned to : ${assetBorrowing.assignee}
             <g:if test="${assetBorrowing?.assetLent}">
                 Returned Time : <g:formatDate date="${assetBorrowing?.returnedDate ? DateUtils.asDate(assetBorrowing?.returnedDate) : null}"
                                       format="MM/dd/yyyy hh:mm a"/> <br/>
@@ -78,11 +80,11 @@
             notes: <br/>
                 <textArea readonly="true">${assetBorrowing?.resolutionNotes}</textArea>
 
-            <g:hiddenField name="assetBorrowingId" value="${assetBorrowing?.id}"/>
+            <g:hiddenField name="assetBorrowingId" value="${assetBorrowing?.id}"/><br/>
             <g:if test="${assetBorrowing?.status == TicketStatus.OPEN}">
                 Add additional notes: <br/>
                 <g:textArea name="additionalNotes"/><br/>
-                <g:actionSubmit value="Add Notes" action="addAdditionalNotes"/>
+                <g:actionSubmit value="Save Changes" action="saveAssetBorrowingChanges"/>
                 <g:actionSubmit value="Resolve Borrowing Request" action="resolveAssetBorrowing"/>
             </g:if>
             <g:else>
