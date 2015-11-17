@@ -16,7 +16,7 @@ import java.time.LocalDateTime
 /**
  * Created by aldrin on 11/15/15.
  */
-class AssetApprovalEquipmentDTO implements Validateable {
+class AssetBorrowingApprovalEquipmentDTO implements Validateable {
 
     String serialNumber
 
@@ -27,6 +27,9 @@ class AssetApprovalEquipmentDTO implements Validateable {
 
     @PackageScope
     LocalDateTime returningDate
+
+    @PackageScope
+    AssetBorrowing owner
 
     static constraints = {
         serialNumber nullable: false, validator: { serialNumber, instance ->
@@ -46,6 +49,7 @@ class AssetApprovalEquipmentDTO implements Validateable {
                     borrowedEquipments = AssetBorrowing.withCriteria {
                         ge('borrowedDate', instance.borrowedDate)
                         le('returningDate', instance.returningDate)
+                        ne('id', instance.owner.id)
                         equipments {
                             eq('id', equipment.id)
                         }
@@ -61,7 +65,13 @@ class AssetApprovalEquipmentDTO implements Validateable {
                 }
 
                 def equipmentHasNotBeenBooked = borrowedEquipments.isEmpty() && eventSupportEquipments.isEmpty()
-                def available = equipment.status == EquipmentStatus.AVAILABLE
+                def available = equipment.status == EquipmentStatus.AVAILABLE ||
+                    AssetBorrowing.withCriteria {
+                        eq('id', instance.owner.id)
+                        equipments {
+                            eq('id', equipment.id)
+                        }
+                    }
 
                 return equipmentHasNotBeenBooked && available ? true : 'equipment.not.available.within.those.days'
             }

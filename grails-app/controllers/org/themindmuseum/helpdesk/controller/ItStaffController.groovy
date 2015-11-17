@@ -1,16 +1,15 @@
 package org.themindmuseum.helpdesk.controller
 
 import grails.plugin.springsecurity.annotation.Secured
-import org.apache.commons.lang.ClassUtils
+import org.springframework.web.servlet.support.RequestContextUtils
 import org.themindmuseum.helpdesk.EquipmentStatus
 import org.themindmuseum.helpdesk.TicketStatus
-import org.themindmuseum.helpdesk.command.AssetApprovalEquipmentDTO
+import org.themindmuseum.helpdesk.command.AssetBorrowingApprovalEquipmentDTO
 import org.themindmuseum.helpdesk.command.AssetApprovalIntentCommand
 import org.themindmuseum.helpdesk.domain.AssetBorrowing
 import org.themindmuseum.helpdesk.domain.Employee
 import org.themindmuseum.helpdesk.domain.EventSupport
 import org.themindmuseum.helpdesk.domain.Incident
-import org.themindmuseum.helpdesk.domain.Role
 
 class ItStaffController {
 
@@ -128,7 +127,7 @@ class ItStaffController {
 
         if(cmd.equipments){
             assetBorrowing.equipments.clear()
-            Iterator<AssetApprovalEquipmentDTO> iterator =
+            Iterator<AssetBorrowingApprovalEquipmentDTO> iterator =
                 cmd.equipments?.iterator()
             while(iterator.hasNext()){
                 def assetApprovalEquipment = iterator.next();
@@ -147,7 +146,50 @@ class ItStaffController {
         render view : 'assetBorrowingDetails', model : [assetBorrowing : cmd]
     }
 
-    //resolveAssetBorrowing - with validation
-    //reopenAssetBorrowing - no validation
-    //markAssetLent - with validation
+    @Secured(["hasAnyRole('IT')"])
+    def resolveAssetBorrowing(AssetApprovalIntentCommand cmd){
+        removeNullEquipments(cmd)
+        if(cmd.validate()){
+            def assetBorrowing = cmd.assetBorrowing
+            assetBorrowing.status = TicketStatus.RESOLVED
+            assetBorrowing.assetLent = true
+            //assetBorrowing.save()
+            saveAssetBorrowingChanges(cmd)
+        } else {
+            render view : 'assetBorrowingDetails', model : [assetBorrowing : cmd]
+        }
+    }
+
+    private def removeNullEquipments(AssetApprovalIntentCommand cmd){
+        Iterator<AssetBorrowingApprovalEquipmentDTO> iterator =
+                cmd.equipments?.iterator()
+        while(iterator?.hasNext()){
+            def assetApprovalEquipment = iterator.next();
+
+            if(!assetApprovalEquipment || !assetApprovalEquipment.serialNumber){
+                iterator.remove();
+            }
+        }
+    }
+
+    @Secured(["hasAnyRole('IT')"])
+    def markAssetLent(AssetApprovalIntentCommand cmd){
+        removeNullEquipments(cmd)
+        if(cmd.validate()){
+            def assetBorrowing = cmd.assetBorrowing
+            assetBorrowing.assetLent = !assetBorrowing.assetLent
+            assetBorrowing.save()
+            saveAssetBorrowingChanges(cmd)
+        } else {
+            render view : 'assetBorrowingDetails', model : [assetBorrowing : cmd]
+        }
+    }
+
+    @Secured(["hasAnyRole('IT')"])
+    def reopenAssetBorrowing(AssetApprovalIntentCommand cmd){
+        def assetBorrowing = cmd.assetBorrowing
+        assetBorrowing.status = TicketStatus.OPEN
+        assetBorrowing.save()
+        redirect action: 'assetBorrowingDetails', id: assetBorrowing.id
+    }
 }

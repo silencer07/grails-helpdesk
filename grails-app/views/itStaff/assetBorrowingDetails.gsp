@@ -51,7 +51,7 @@
             Status : ${assetBorrowing.status} <br />
             Borrowing Request Fulfilled : <g:formatBoolean boolean="${assetBorrowing.assetLent}" true="Yes" false="No"/> <br/>
             Requested by : ${assetBorrowing.reportedBy}<br/>
-            Assigned to : ${assetBorrowing.assignee}
+            Assigned to : ${assetBorrowing.assignee} <br/>
             <g:if test="${assetBorrowing?.assetLent}">
                 Returned Time : <g:formatDate date="${assetBorrowing?.returnedDate ? DateUtils.asDate(assetBorrowing?.returnedDate) : null}"
                                       format="MM/dd/yyyy hh:mm a"/> <br/>
@@ -76,7 +76,8 @@
                                 <td><input type="button" value="Remove Equipment" onclick="removeEquipment(('added-equipment-${i}'))"/></td>
                             </g:if>
                             <g:else>
-                                <td>${equipment?.serialNumber}</td>
+                                <td>${equipment?.serialNumber}
+                                    <g:hiddenField name="equipments[${i}].serialNumber" value="${equipment?.serialNumber}"/></td>
                             </g:else>
                         </tr>
                     </g:each>

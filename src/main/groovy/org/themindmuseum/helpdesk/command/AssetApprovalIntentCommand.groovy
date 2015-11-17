@@ -1,13 +1,11 @@
 package org.themindmuseum.helpdesk.command
 
 import grails.validation.Validateable
-import groovy.transform.PackageScope
 import org.apache.commons.collections.ListUtils
 import org.apache.commons.collections.Factory
 import org.themindmuseum.helpdesk.TicketStatus
 import org.themindmuseum.helpdesk.domain.AssetBorrowing
 import org.themindmuseum.helpdesk.domain.Employee
-import org.themindmuseum.helpdesk.domain.Equipment
 
 import java.time.LocalDateTime
 
@@ -17,33 +15,37 @@ import java.time.LocalDateTime
 class AssetApprovalIntentCommand implements Validateable{
 
     Long assetBorrowingId
-    List<AssetApprovalEquipmentDTO> equipments = ListUtils.lazyList([], {new AssetApprovalEquipmentDTO()} as Factory)
+    List<AssetBorrowingApprovalEquipmentDTO> equipments = ListUtils.lazyList([], {new AssetBorrowingApprovalEquipmentDTO()} as Factory)
     String additionalNotes
 
     private AssetBorrowing assetBorrowing;
 
     static constraints = {
         additionalNotes nullable: true, maxSize: 1024
-        equipments minSize: 1, validator : { equipments, instance ->
-            for(def equipment : equipments){
-                if(equipment?.validate()){
-                    equipment.borrowedDate = instance.assetBorrowing?.borrowedDate
-                    equipment.returningDate = instance.assetBorrowing?.returningDate
-                    return true
-                }
-                return 'equipments.not.available'
-            }
-        }
-
         assetBorrowingId nullable : false, validator : { assetBorrowingId, instance ->
-            def assetBorrowing = AssetBorrowing.findById(assetBorrowingId);
+            def assetBorrowing = AssetBorrowing.findById(assetBorrowingId)
             if(assetBorrowing){
                 instance.assetBorrowing = assetBorrowing
                 return true
             }
             return 'asset.borrowing.must.exist'
         }
+        equipments minSize: 1, validator : { equipments, instance ->
+            for(def equipment : equipments){
+                def assetBorrowing = AssetBorrowing.findById(instance.assetBorrowingId)
+                assert assetBorrowing
+                equipment.owner = assetBorrowing
+                if(equipment?.validate()){
+                    equipment.borrowedDate = assetBorrowing.borrowedDate
+                    equipment.returningDate = assetBorrowing.returningDate
+                    return true
+                }
+                return 'equipments.not.available'
+            }
+        }
 
+        assignee nullable : true
+        returnedDate nullable : true
     }
 
     Long getId(){
@@ -64,6 +66,10 @@ class AssetApprovalIntentCommand implements Validateable{
 
     LocalDateTime getReturningDate() {
         return assetBorrowing?.returningDate
+    }
+
+    LocalDateTime getReturnedDate(){
+        return assetBorrowing?.returnedDate
     }
 
     boolean getAssetLent() {
