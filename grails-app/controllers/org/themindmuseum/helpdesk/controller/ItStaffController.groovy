@@ -4,6 +4,7 @@ import grails.plugin.springsecurity.annotation.Secured
 import org.apache.commons.lang.ClassUtils
 import org.themindmuseum.helpdesk.EquipmentStatus
 import org.themindmuseum.helpdesk.TicketStatus
+import org.themindmuseum.helpdesk.command.AssetApprovalEquipmentDTO
 import org.themindmuseum.helpdesk.command.AssetApprovalIntentCommand
 import org.themindmuseum.helpdesk.domain.AssetBorrowing
 import org.themindmuseum.helpdesk.domain.Employee
@@ -73,7 +74,7 @@ class ItStaffController {
             if(params.additionalNotes){
                 incident.resolutionNotes = """
                    |${employee.fullName} : \n
-                   |${params.additionalNotes} \n
+                   |${params.additionalNotes}
                    |${incident.resolutionNotes}""".stripMargin().stripIndent()
                 incident.assignee = Employee.findByEmail(params.assignee)
                 incident.save()
@@ -83,7 +84,7 @@ class ItStaffController {
             if(params.equipmentHistoryNotes){
                 equipment.notes = """
                    |${employee.fullName} : \n
-                   |${params.equipmentHistoryNotes} \n
+                   |${params.equipmentHistoryNotes}
                    |${equipment.notes}""".stripMargin().stripIndent()
             }
             equipment.status = params.equipmentStatus ? EquipmentStatus.valueOf(params.equipmentStatus) : equipment.status
@@ -121,12 +122,13 @@ class ItStaffController {
         if(params.additionalNotes){
             assetBorrowing.resolutionNotes = """
                    |${employee.fullName} : \n
-                   |${params.additionalNotes} \n
+                   |${params.additionalNotes}
                    |${assetBorrowing.resolutionNotes}""".stripMargin().stripIndent()
         }
 
         if(cmd.equipments){
-            Iterator<AssetApprovalIntentCommand.AssetApprovalEquipment> iterator =
+            assetBorrowing.equipments.clear()
+            Iterator<AssetApprovalEquipmentDTO> iterator =
                 cmd.equipments?.iterator()
             while(iterator.hasNext()){
                 def assetApprovalEquipment = iterator.next();
@@ -135,15 +137,7 @@ class ItStaffController {
                     iterator.remove();
                 }
 
-                /*
-                 * validate = false when
-                 * 1. equipment not available
-                 * 2. the borrowing date overlaps with another
-                 *
-                 * TODO
-                 * 1. makr asset lent of the assetBorrowing
-                 */
-                if(assetApprovalEquipment.validate()){
+                if(assetApprovalEquipment?.validate()){
                     assetBorrowing.addToEquipments(assetApprovalEquipment.equipment)
                 }
             }

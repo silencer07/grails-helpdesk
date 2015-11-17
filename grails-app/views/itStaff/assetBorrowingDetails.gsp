@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ page import="org.themindmuseum.helpdesk.utils.DateUtils" %>
 <%@ page import="org.themindmuseum.helpdesk.TicketStatus" %>
+<%@ page import="org.springframework.validation.FieldError" %>
 <html>
 <head>
     <meta name="layout" content="main"/>
@@ -10,10 +11,12 @@
             var additionalEquipmentDiv = $('#additional-equipment-div div:last');
             var $divClone = additionalEquipmentDiv.clone();
 
-            var textName = $divClone.children('input:text').prop('name');
+            var $textBox = $divClone.children('input:text');
+            $textBox.prop('value', '');
+            var textName = $textBox.prop('name');
             var index = textName.substring(textName.indexOf('[') + 1, textName.indexOf(']'));
             textName = textName.replace(index, (parseInt(index) + 1).toString());
-            $divClone.children('input:text').prop('name', textName);
+            $textBox.prop('name', textName);
             additionalEquipmentDiv.after($divClone);
         }
 
@@ -26,6 +29,19 @@
 <h1>Asset Borrowing Details</h1>
 <div>
     <div>
+        <g:hasErrors bean="${assetBorrowing}">
+            <ul class="errors" role="alert">
+            <g:each in="${assetBorrowing.equipments}" var="equipment">
+                <g:eachError bean="${equipment}" var="error">
+                    <li <g:if test="${error in FieldError}">data-field-id="${error.field}"</g:if>>
+                        <g:message error="${error}"/>
+                    </li>
+                </g:eachError>
+            </g:each>
+            </ul>
+        </g:hasErrors>
+    </div>
+    <div>
         <g:form method="post">
             <g:hiddenField name="assetBorrowingId" value="${assetBorrowing.id}"/>
             Subject : ${assetBorrowing?.subject} <br/>
@@ -34,7 +50,7 @@
             Returning Time : <g:formatDate date="${DateUtils.asDate(assetBorrowing?.returningDate)}" format="MM/dd/yyyy hh:mm a"/> <br/>
             Status : ${assetBorrowing.status} <br />
             Borrowing Request Fulfilled : <g:formatBoolean boolean="${assetBorrowing.assetLent}" true="Yes" false="No"/> <br/>
-            Requested by : ${assetBorrowing.reportedBy}
+            Requested by : ${assetBorrowing.reportedBy}<br/>
             Assigned to : ${assetBorrowing.assignee}
             <g:if test="${assetBorrowing?.assetLent}">
                 Returned Time : <g:formatDate date="${assetBorrowing?.returnedDate ? DateUtils.asDate(assetBorrowing?.returnedDate) : null}"
@@ -54,13 +70,13 @@
                     <tbody>
                     <g:each in="${assetBorrowing?.equipments}" var="equipment" status="i">
                         <tr id="added-equipment-${i}">
-                            <td>${equipment.name}</td>
+                            <td>${equipment?.name}</td>
                             <g:if test="${assetBorrowing?.status == TicketStatus.OPEN}">
-                                <td><g:textField name="equipments[${i}].serialNumber" value="${equipment.serialNumber}" readonly="readonly"/></td>
+                                <td><g:textField name="equipments[${i}].serialNumber" value="${equipment?.serialNumber}" readonly="readonly"/></td>
                                 <td><input type="button" value="Remove Equipment" onclick="removeEquipment(('added-equipment-${i}'))"/></td>
                             </g:if>
                             <g:else>
-                                <td>${equipment.serialNumber}</td>
+                                <td>${equipment?.serialNumber}</td>
                             </g:else>
                         </tr>
                     </g:each>
