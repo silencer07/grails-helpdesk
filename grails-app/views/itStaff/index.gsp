@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ page import="org.themindmuseum.helpdesk.utils.DateUtils" %>
+<%@ page import="org.themindmuseum.helpdesk.TicketStatus" %>
 <html>
     <head>
         <meta name="layout" content="main"/>
@@ -85,7 +86,12 @@
                         <tbody>
                         <g:each in="${approvedBorrowRequests}" var="borrowRequest">
                             <tr>
-                                <td><g:link action="assetBorrowingDetails" id="${borrowRequest.id}">${borrowRequest.subject}</g:link></td>
+                                <g:if test="${TicketStatus.unresolvedStatuses.contains(borrowRequest.status)}">
+                                    <td><g:link action="assetBorrowingDetails" id="${borrowRequest.id}">${borrowRequest.subject}</g:link></td>
+                                </g:if>
+                                <g:else>
+                                    <td><g:link action="receiveBorrowedAssets" id="${borrowRequest.id}">${borrowRequest.subject}</g:link></td>
+                                </g:else>
                                 <td><g:formatDate date="${DateUtils.asDate(borrowRequest.timeFiled)}" format="MM/dd/yyyy hh:mm a"/></td>
                             </tr>
                         </g:each>
