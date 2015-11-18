@@ -38,10 +38,11 @@ class AssetApprovalIntentCommand implements Validateable{
                 if(equipment?.validate()){
                     equipment.borrowedDate = assetBorrowing.borrowedDate
                     equipment.returningDate = assetBorrowing.returningDate
-                    return true
+                } else {
+                    return 'equipments.not.available'
                 }
-                return 'equipments.not.available'
             }
+            return true
         }
 
         assignee nullable : true
