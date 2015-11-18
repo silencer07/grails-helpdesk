@@ -18,6 +18,7 @@ class Equipment {
     LocalDate datePurchased
     LocalDate warrantyEndDate
     LocalDate dateDisposed
+    LocalDate dateTagged = LocalDate.now()
     String notes
 
     static constraints = {
@@ -25,15 +26,15 @@ class Equipment {
         manufacturer unique:false, blank:false, size : 1..50
         serviceTag blank:false, size : 1..50
         serialNumber unique:true, blank:false, size : 1..200
-        details size : 1..1000
+        details nullable: true, size : 1..1000
         status nullable: false
         type nullable: false
         datePurchased nullable: false
         warrantyEndDate nullable: false, validator : warrantyEndDateMustBeGreaterOrEqualThanPurchaseDate
         dateDisposed nullable: true, validator: dateDisposedMustBeGreaterThanPurchaseDate
+        dateTagged nullable: false
         vendor nullable: false
         notes nullable: true
-        details nullable: true
     }
 
     static def warrantyEndDateMustBeGreaterOrEqualThanPurchaseDate = { warrantyEndDate, instance ->

@@ -8,7 +8,7 @@
     <title>Asset Borrowing Details</title>
     <script>
         $(document).ready(function(){
-            $("[id*='dateTagged']").each(function( index ) {
+            $("[id*='dateTaggedString']").each(function( index ) {
                 applyDateTimePickerStyle($(this).prop('id'));
             });
         });
@@ -41,41 +41,28 @@
             Borrowing Request Fulfilled : <g:formatBoolean boolean="${assetBorrowing.assetLent}" true="Yes" false="No"/> <br/>
             Requested by : ${assetBorrowing.reportedBy}<br/>
             Assigned to : ${assetBorrowing.assignee} <br/>
-            <g:if test="${assetBorrowing?.assetLent}">
-                Returned Time : <g:formatDate date="${assetBorrowing?.returnedDate ? DateUtils.asDate(assetBorrowing?.returnedDate) : null}"
-                                      format="MM/dd/yyyy hh:mm a"/> <br/>
-            </g:if>
-
-            <table>
-                <thead>
-                <th>Equipment</th>
-                <th>Serial Number</th>
-                <th>Tag as</th> <!-- AVAILABLE, MISSING, WITH_DAMAGE -->
-                <th>Date Tagged</th>
-                </thead>
-                <tbody>
-                <g:set var="tags" value="${[AVAILABLE : 'Returned', MISSING :'Missing', WITH_DAMAGE : 'With Damage']}"/>
-                <g:each in="${assetBorrowing?.equipments}" var="equipment" status="i">
-                    <tr id="added-equipment-${i}">
-                        <td>${equipment?.name}</td>
-                        <td>${equipment?.serialNumber}
-                            <g:hiddenField name="equipments[${i}].serialNumber" value="${equipment?.serialNumber}"/></td>
-                        <td><g:select name="equipments[${i}].status" from="${tags.entrySet()}"
-                                  optionKey="key" optionValue="value" /></td>
-                        <td><g:textField name="equipments[${i}].dateTagged" id="equipments-${i}-dateTagged"/></td>
-                    </tr>
-                </g:each>
-                </tbody>
-            </table>
-
+            Returned Time : <g:formatDate date="${assetBorrowing?.returnedDate ? DateUtils.asDate(assetBorrowing?.returnedDate) : null}"
+              format="MM/dd/yyyy hh:mm a"/> <br/>
             Description : <br/>
-                <textArea readonly="true">${assetBorrowing?.description}</textArea><br/>
+            <textArea readonly="true">${assetBorrowing?.description}</textArea><br/>
             notes: <br/>
-                <textArea readonly="true">${assetBorrowing?.resolutionNotes}</textArea> <br/>
+            <textArea readonly="true">${assetBorrowing?.resolutionNotes}</textArea> <br/>
 
             Add additional notes: <br/>
             <g:textArea name="additionalNotes"/><br/>
-            <g:actionSubmit value="Save Changes" action="saveAssetBorrowingChanges"/>
+            <h3>Equipments :</h3>
+            <g:set var="tags" value="${[AVAILABLE : 'Returned', MISSING :'Missing', WITH_DAMAGE : 'With Damage']}"/>
+            <g:each in="${assetBorrowing?.equipments}" var="equipment" status="i">
+                ${equipment?.name}(SN: ${equipment?.serialNumber})<g:select name="equipments[${i}].status" from="${tags.entrySet()}"
+                    optionKey="key" optionValue="value" /> <g:textField name="equipments[${i}].dateTaggedString" id="equipments-${i}-dateTaggedString"/><br/>
+                    <g:hiddenField name="equipments[${i}].serialNumber" value="${equipment?.serialNumber}"/>
+                equipment history:<br/>
+                <textArea readonly="true">${equipment?.notes}</textArea><br/>
+                Add equipment history:<br/>
+                <g:textArea name="equipments[${i}].notes"/>
+                <br/>
+            </g:each>
+            <g:actionSubmit value="Save Changes" action="saveAssetReturningChanges"/>
             <g:actionSubmit value="Reopen Borrowing Request" action="reopenAssetBorrowing"/>
             <g:actionSubmit value="Complete returning process" action="markAssetReturned"/>
         </g:form>

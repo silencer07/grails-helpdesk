@@ -6,6 +6,7 @@ import org.themindmuseum.helpdesk.EquipmentStatus
 import org.themindmuseum.helpdesk.TicketStatus
 import org.themindmuseum.helpdesk.command.AssetBorrowingApprovalEquipmentDTO
 import org.themindmuseum.helpdesk.command.AssetApprovalIntentCommand
+import org.themindmuseum.helpdesk.command.AssetReturningIntentCommand
 import org.themindmuseum.helpdesk.domain.AssetBorrowing
 import org.themindmuseum.helpdesk.domain.Employee
 import org.themindmuseum.helpdesk.domain.EventSupport
@@ -153,7 +154,6 @@ class ItStaffController {
             def assetBorrowing = cmd.assetBorrowing
             assetBorrowing.status = TicketStatus.RESOLVED
             assetBorrowing.assetLent = true
-            //assetBorrowing.save()
             saveAssetBorrowingChanges(cmd)
         } else {
             render view : 'assetBorrowingDetails', model : [assetBorrowing : cmd]
@@ -189,7 +189,37 @@ class ItStaffController {
     def reopenAssetBorrowing(AssetApprovalIntentCommand cmd){
         def assetBorrowing = cmd.assetBorrowing
         assetBorrowing.status = TicketStatus.OPEN
+        assetBorrowing.assetReturned = false
         assetBorrowing.save()
         redirect action: 'assetBorrowingDetails', id: assetBorrowing.id
+    }
+
+    @Secured(["hasAnyRole('IT')"])
+    def receiveBorrowedAssets(long id){
+        assetBorrowingDetails(id)
+    }
+
+    @Secured(["hasAnyRole('IT')"])
+    def saveAssetReturningChanges(AssetReturningIntentCommand cmd) {
+        def employee = springSecurityService.loadCurrentUser()
+        def assetBorrowing = cmd.assetBorrowing
+
+        if(params.additionalNotes){
+            assetBorrowing.resolutionNotes = """
+                   |${employee.fullName} : \n
+                   |${params.additionalNotes}
+                   |${assetBorrowing.resolutionNotes}""".stripMargin().stripIndent()
+            assetBorrowing.save()
+        }
+        redirect action : 'receiveBorrowedAssets', id : assetBorrowing.id
+    }
+
+    @Secured(["hasAnyRole('IT')"])
+    def markAssetReturned(AssetReturningIntentCommand cmd) {
+        if(cmd.validate()){
+            render 'valid'
+        } else {
+            render 'invalid'
+        }
     }
 }
