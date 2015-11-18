@@ -26,10 +26,7 @@
     <asset:javascript src="metisMenu.js"/>
     <asset:javascript src="metisMenu.min.js"/>
     <asset:javascript src="sb-admin-2.js"/>
-    <asset:javascript src="jquery.js"/>
-    <asset:stylesheet src="font-awesome.css"/>
-    <asset:stylesheet src="font-awesome.min.css"/>
-    <asset:javascript src="jquery.min.js"/>
+
 
 
 
