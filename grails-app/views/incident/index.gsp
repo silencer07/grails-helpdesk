@@ -13,12 +13,23 @@
             </div>
             <!-- /.col-lg-12 -->
         </div>
-        <div>
-            <ul>
-                <li>Subject is required</li>
-                <li>Serial number is required</li>
-            </ul>
-        </div>
+        <g:hasErrors bean="${incident}">
+            <div class="alert alert-danger">
+                <ul class="errors" role="alert">
+                    <g:eachError bean="${incident}" var="error">
+                        <li <g:if test="${error in org.springframework.validation.FieldError}">data-field-id="${error.field}"</g:if>>
+                            <g:message error="${error}"/>
+                        </li>
+                    </g:eachError>
+                </ul>
+            </div>
+        </g:hasErrors>
+        <g:if test="${successMessage}">
+            <div class="alert alert-success">
+                ${successMessage}
+            </div>
+        </g:if>
+
         <!-- /.row -->
         <div class="row">
             <div class="col-lg-10">
@@ -29,24 +40,25 @@
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-lg-12">
-                                <form role="form">
+                                <g:form controller="incident" action="saveIncident" role="form">
                                     <div class="form-group">
                                         <label> Subject </label>
-
-                                        <input class="form-control" placeholder="e.g. Mouse not working">
+                                        <g:textField name="subject" value="${incident?.subject}"
+                                             class="form-control" placeholder="e.g. Mouse not working"/>
                                     </div>
                                     <div class="form-group">
-                                        <label> Equipment </label>
-                                        <input class="form-control" placeholder="e.g. Mouse">
+                                        <label> Equipment Serial Number</label>
+                                        <g:textField name="serialNumber" value="${incident?.serialNumber}"
+                                             class="form-control" placeholder="Serial number here"/>
                                     </div>
 
                                     <div class="form-group">
                                         <label>Concern</label>
-                                        <textarea class="form-control" rows="3"></textarea>
+                                        <g:textArea name="description" value="${incident?.description}"
+                                                    class="form-control" rows="3"/>
                                     </div>
-                                    <button type="submit" class="btn btn-default">Submit</button>
-                                    <button type="button" class="btn btn-default"> Cancel</button>
-                                </form>
+                                    <g:submitButton name="submit" value="File Ticket" class="btn btn-default"/>
+                                </g:form>
                             </div>
                             <!-- /.col-lg-6 (nested) -->
                         </div>

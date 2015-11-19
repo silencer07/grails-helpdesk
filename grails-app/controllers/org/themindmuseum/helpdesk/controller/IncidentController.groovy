@@ -2,15 +2,29 @@ package org.themindmuseum.helpdesk.controller
 
 import org.themindmuseum.helpdesk.TicketStatus
 import grails.plugin.springsecurity.annotation.Secured
+import org.themindmuseum.helpdesk.command.IncidentFilingCommand
 import org.themindmuseum.helpdesk.domain.Incident
 import sun.security.krb5.internal.Ticket
 
 class IncidentController extends SupportTicketController{
 
-    static allowedMethods = [addAdditionalNotes: 'POST', resolveIncident: 'POST', reopenIncident: 'POST']
+    static allowedMethods = [addAdditionalNotes: 'POST', resolveIncident: 'POST', reopenIncident: 'POST', 'saveIncident' : 'POST']
 
     @Secured(["hasAnyRole('IT', 'EMPLOYEE')"])
     def index() {}
+
+    @Secured(["hasAnyRole('IT', 'EMPLOYEE')"])
+    def saveIncident(IncidentFilingCommand cmd) {
+        def model = [incident: cmd]
+        if(cmd.validate()){
+            def incident = new Incident(cmd.properties)
+            incident.reportedBy = springSecurityService.currentUser
+            incident.save()
+            model.successMessage = "Incident filed Successfully"
+        }
+
+        render view:'index', model : model
+    }
 
     @Secured(["hasAnyRole('IT', 'EMPLOYEE')"])
     def myOpenIncidents(){
