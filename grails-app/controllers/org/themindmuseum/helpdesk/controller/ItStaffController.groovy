@@ -4,13 +4,16 @@ import grails.plugin.springsecurity.annotation.Secured
 import org.springframework.web.servlet.support.RequestContextUtils
 import org.themindmuseum.helpdesk.EquipmentStatus
 import org.themindmuseum.helpdesk.TicketStatus
-import org.themindmuseum.helpdesk.command.AssetBorrowingApprovalEquipmentDTO
 import org.themindmuseum.helpdesk.command.AssetApprovalIntentCommand
+import org.themindmuseum.helpdesk.command.AssetBorrowingApprovalEquipmentDTO
+import org.themindmuseum.helpdesk.command.AssetReturningEquipmentDTO
 import org.themindmuseum.helpdesk.command.AssetReturningIntentCommand
 import org.themindmuseum.helpdesk.domain.AssetBorrowing
 import org.themindmuseum.helpdesk.domain.Employee
 import org.themindmuseum.helpdesk.domain.EventSupport
 import org.themindmuseum.helpdesk.domain.Incident
+
+import java.time.LocalDateTime
 
 class ItStaffController {
 
@@ -201,7 +204,7 @@ class ItStaffController {
 
     @Secured(["hasAnyRole('IT')"])
     def saveAssetReturningChanges(AssetReturningIntentCommand cmd) {
-        def employee = springSecurityService.loadCurrentUser()
+        def employee = springSecurityService.currentUser
         def assetBorrowing = cmd.assetBorrowing
 
         if(params.additionalNotes){
@@ -209,17 +212,39 @@ class ItStaffController {
                    |${employee.fullName} : \n
                    |${params.additionalNotes}
                    |${assetBorrowing.resolutionNotes}""".stripMargin().stripIndent()
-            assetBorrowing.save()
         }
+
+        cmd.equipments.each { AssetReturningEquipmentDTO dto ->
+            def equipment = dto.equipment
+            if(equipment.status != dto.status){
+                equipment.status = dto.status
+                equipment.dateTagged = dto.dateTagged
+            }
+            if(dto.additionalNotes){
+                equipment.notes = """
+                   |${employee.fullName} : \n
+                   |${dto.additionalNotes}
+                   |${equipment.notes ?: ''}""".stripMargin().stripIndent()
+            }
+            equipment.save()
+        }
+
+        assetBorrowing.save()
         redirect action : 'receiveBorrowedAssets', id : assetBorrowing.id
     }
 
+    def messageSource
     @Secured(["hasAnyRole('IT')"])
     def markAssetReturned(AssetReturningIntentCommand cmd) {
         if(cmd.validate()){
-            render 'valid'
+            def assetBorrowing = cmd.assetBorrowing
+            assetBorrowing.assetReturned = true
+            assetBorrowing.returnedDate = LocalDateTime.now()
+            saveAssetReturningChanges(cmd)
         } else {
-            render 'invalid'
+            def locale = RequestContextUtils.getLocale(request)
+            def errorsMsgs = cmd.errors.allErrors.collect{messageSource.getMessage(it, locale)}.join('\n');
+            render errorsMsgs
         }
     }
 }

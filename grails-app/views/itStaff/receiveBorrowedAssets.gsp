@@ -59,7 +59,7 @@
                 equipment history:<br/>
                 <textArea readonly="true">${equipment?.notes}</textArea><br/>
                 Add equipment history:<br/>
-                <g:textArea name="equipments[${i}].notes"/>
+                <g:textArea name="equipments[${i}].additionalNotes"/>
                 <br/>
             </g:each>
             <g:actionSubmit value="Save Changes" action="saveAssetReturningChanges"/>

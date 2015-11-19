@@ -42,7 +42,7 @@ class AssetApprovalIntentCommand implements Validateable{
                     return 'equipments.not.available'
                 }
             }
-            return true
+            return equipments.isEmpty() ? 'equipments.must.not.be.empty' : true
         }
 
         assignee nullable : true

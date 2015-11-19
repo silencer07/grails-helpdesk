@@ -8,6 +8,7 @@ import org.themindmuseum.helpdesk.utils.DateUtils
 
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 /**
  * Created by aldrin on 11/18/15.
@@ -16,17 +17,26 @@ class AssetReturningEquipmentDTO implements Validateable{
 
     String serialNumber
     EquipmentStatus status
-    String dateTaggedString = DateUtils.formatJQueryDateTimeInput(LocalDate.now())
-    String notes
+    String dateTaggedString = LocalDateTime.now().format(DateTimeFormatter.ofPattern(DateUtils.DEFAULT_JQUERY_DATETIME_PICKER_FORMAT))
+    String additionalNotes
 
-    private Equipment equipment = Equipment.findBySerialNumber(serialNumber)
+    private Equipment equipment
 
     static constraints = {
-        serialNumber blank:false, size : 1..200
+        serialNumber blank:false, size : 1..200, validator : { serialNumber, instance ->
+            def equipment = Equipment.findBySerialNumber(serialNumber)
+            if(equipment){
+                instance.equipment = equipment
+                return true
+            }
+            return 'serial.number.invalid'
+        }
         status nullable: false
         dateTaggedString nullable : false
         notes nullable : true, blank : true
         dateTagged nullable : false
+        additionalNotes nullable:true
+        equipment nullable : true
     }
 
     String getName() {
@@ -47,5 +57,13 @@ class AssetReturningEquipmentDTO implements Validateable{
 
     LocalDate getDateTagged(){
         return DateUtils.tryParseLocalDateTimeFromDateTimePicker(dateTaggedString)?.toLocalDate()
+    }
+
+    Equipment getEquipment(){
+        return equipment
+    }
+
+    String getNotes(){
+        return equipment?.notes
     }
 }

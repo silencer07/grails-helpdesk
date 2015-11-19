@@ -35,7 +35,7 @@ class AssetReturningIntentCommand implements Validateable{
                     return 'equipments.return.validation.error'
                 }
             }
-            return true
+            return equipments.isEmpty() ? 'equipments.must.not.be.empty' : true
         }
 
         assignee nullable : true
