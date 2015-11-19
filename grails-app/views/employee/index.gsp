@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page import="org.themindmuseum.helpdesk.utils.DateUtils" %>
 <html>
     <head>
         <meta name="layout" content="main"/>
@@ -18,40 +19,37 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            My Tickets
+                            My Unresolved Incidents
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <div class="table-responsive">
-                                <table class="table table-striped">
-                                    <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Concern</th>
-                                        <th>File Date</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td><a href="#">Mouse not working</a></td>
-                                        <td>10/31/2015</td>
-
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td><a href="#">Monitor needs HDMI</a></td>
-                                        <td>11/01/2015</td>
-
-                                    </tr>
-                                    <tr>
-                                        <td>3</td>
-                                        <td><a href="#">Keyboard broken</a></td>
-                                        <td>11/20/2015</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                                <p>If no item then show me: No incidents filed</p>
+                                <g:if test="${openIncidents}">
+                                    <table class="table table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Concern</th>
+                                            <th>File Date</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                            <g:each in="${openIncidents}" var="incident" status="i">
+                                                <tr>
+                                                    <td>${i + 1}</td>
+                                                    <td>
+                                                        <g:link controller="incident" action="details" id="${incident.id}">${incident.subject}</g:link>
+                                                    </td>
+                                                    <td><g:formatDate date="${DateUtils.asDate(incident.timeFiled)}"
+                                                      format="MM/dd/yyyy hh:mm a"/></td>
+                                                </tr>
+                                            </g:each>
+                                        </tbody>
+                                    </table>
+                                </g:if>
+                                <g:else>
+                                    <p>No incidents filed</p>
+                                </g:else>
                             </div>
                             <!-- /.table-responsive -->
                         </div>
@@ -66,40 +64,34 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            Borrowed Equipments
+                            Pending Borrow Requests
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <div class="table-responsive">
-                                <table class="table table-striped">
-                                    <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Equipment</th>
-                                        <th>Return Date</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td><a href="#">Macbook Pro</a></td>
-                                        <td>10/31/2015 this date should be red since overdue</td>
-
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td><a href="#">Acer Laptop </a></td>
-                                        <td>11/01/2015</td>
-
-                                    </tr>
-                                    <tr>
-                                        <td>3</td>
-                                        <td><a href="#">VGA Adapter</a></td>
-                                        <td>11/20/2015</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                                <p>If no item then show me: No Borrowed Equipment</p>
+                                <g:if test="${pendingBorrowRequest}">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <th>#</th>
+                                            <th>Subject</th>
+                                            <th>Borrow Date</th>
+                                        </thead>
+                                        <tbody>
+                                            <g:each in="${pendingBorrowRequest}" var="borrowReq" status="i">
+                                                <tr class="${DateUtils.isPastAlready(borrowReq.borrowedDate) ? 'danger' : ''}">
+                                                    <td>${i + 1}</td>
+                                                    <td><g:link controller="borrow" action="details"
+                                                        id="${borrowReq.id}">${borrowReq.subject}</g:link></td>
+                                                    <td><g:formatDate date="${DateUtils.asDate(borrowReq.borrowedDate)}"
+                                                        format="MM/dd/yyyy hh:mm a"/></td>
+                                                </tr>
+                                            </g:each>
+                                        </tbody>
+                                    </table>
+                                </g:if>
+                                <g:else>
+                                    <p>No pending request</p>
+                                </g:else>
                             </div>
                             <!-- /.table-responsive -->
                         </div>
@@ -114,40 +106,34 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            Request for Borrowing Equipment
+                            Approved Borrow Requests
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <div class="table-responsive">
-                                <table class="table table-striped">
-                                    <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Equipment</th>
-                                        <th>Filed Date</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td><a href="#">Acer Projector</a></td>
-                                        <td>10/31/2015 this date should be red since it past already</td>
-
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td><a href="#">Acer Laptop</a></td>
-                                        <td>11/01/2015</td>
-
-                                    </tr>
-                                    <tr>
-                                        <td>3</td>
-                                        <td><a href="#">Magic Mouse</a></td>
-                                        <td>11/20/2015</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                                <p>If no item then show me: No Equipment Requested</p>
+                                <g:if test="${approvedBorrowRequest}">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <th>#</th>
+                                            <th>Subject</th>
+                                            <th>Returning Date</th>
+                                        </thead>
+                                        <tbody>
+                                        <g:each in="${approvedBorrowRequest}" var="borrowReq" status="i">
+                                            <tr class="${DateUtils.isPastAlready(borrowReq.returningDate) ? 'danger' : ''}">
+                                                <td>${i + 1}</td>
+                                                <td><g:link controller="borrow" action="details"
+                                                            id="${borrowReq.id}">${borrowReq.subject}</g:link></td>
+                                                <td><g:formatDate date="${DateUtils.asDate(borrowReq.returningDate)}"
+                                                                  format="MM/dd/yyyy hh:mm a"/></td>
+                                            </tr>
+                                        </g:each>
+                                        </tbody>
+                                    </table>
+                                </g:if>
+                                <g:else>
+                                    <p>No approved request</p>
+                                </g:else>
                             </div>
                             <!-- /.table-responsive -->
                         </div>
@@ -157,6 +143,52 @@
                 </div>
                 <!-- /.col-lg-6 -->
             </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Pending Event Support Request
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <g:if test="${pendingEventSupport}">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <th>#</th>
+                                            <th>Event Name</th>
+                                            <th>Start Date</th>
+                                            <th>End Date</th>
+                                        </thead>
+                                        <tbody>
+                                            <g:each in="${pendingEventSupport}" var="event" status="i">
+                                                <tr class="${DateUtils.isPastAlready(event.startTime) ? 'danger' : ''}">
+                                                    <td>${i + 1}</td>
+                                                    <td><g:link controller="eventSupport" action="details"
+                                                            id="${event.id}">${event.subject}</g:link></td>
+                                                    <td><g:formatDate date="${DateUtils.asDate(event.startTime)}"
+                                                                      format="MM/dd/yyyy hh:mm a"/></td>
+                                                    <td><g:formatDate date="${DateUtils.asDate(event.endTime)}"
+                                                                      format="MM/dd/yyyy hh:mm a"/></td>
+                                                </tr>
+                                            </g:each>
+                                        </tbody>
+                                    </table>
+                                </g:if>
+                                <g:else>
+                                    <p>No pending event support request</p>
+                                </g:else>
+                            </div>
+                            <!-- /.table-responsive -->
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-6 -->
+            </div>
+            <!-- /.row -->
             <!-- /.row -->
             <div class="row">
                 <div class="col-lg-12">
@@ -167,25 +199,32 @@
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <div class="table-responsive">
-                                <table class="table table-striped">
-                                    <thead>
-                                    <tr>
+                                <g:if test="${pastEventSupport}">
+                                    <table class="table table-striped">
+                                        <thead>
                                         <th>#</th>
                                         <th>Event Name</th>
                                         <th>Start Date</th>
                                         <th>End Date</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td><a href="#">Museum Exhibition</a></td>
-                                        <td>10/31/2015</td>
-                                        <td>11/05/2015</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                                <p>If no item then show me: No Upcoming Events</p>
+                                        </thead>
+                                        <tbody>
+                                        <g:each in="${pastEventSupport}" var="event" status="i">
+                                            <tr class="${DateUtils.isPastAlready(event.endTime) ? 'danger' : ''}">
+                                                <td>${i + 1}</td>
+                                                <td><g:link controller="eventSupport" action="details"
+                                                            id="${event.id}">${event.subject}</g:link></td>
+                                                <td><g:formatDate date="${DateUtils.asDate(event.startTime)}"
+                                                                  format="MM/dd/yyyy hh:mm a"/></td>
+                                                <td><g:formatDate date="${DateUtils.asDate(event.endTime)}"
+                                                                  format="MM/dd/yyyy hh:mm a"/></td>
+                                            </tr>
+                                        </g:each>
+                                        </tbody>
+                                    </table>
+                                </g:if>
+                                <g:else>
+                                    <p>No upcoming events</p>
+                                </g:else>
                             </div>
                             <!-- /.table-responsive -->
                         </div>
@@ -196,6 +235,7 @@
                 <!-- /.col-lg-6 -->
             </div>
             <!-- /.row -->
+
         </div>
         <!-- /#page-wrapper -->
     </div>

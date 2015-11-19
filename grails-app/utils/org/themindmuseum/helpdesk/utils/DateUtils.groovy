@@ -38,7 +38,15 @@ public class DateUtils {
         }
     }
 
-    public static def String formatJQueryDateTimeInput(LocalDateTime localDateTime){
+    public static def formatJQueryDateTimeInput(LocalDateTime localDateTime){
         return localDateTime ? asDate(localDateTime).format(DEFAULT_JQUERY_DATETIME_PICKER_FORMAT) : ''
+    }
+
+    public static def isPastAlready(LocalDate localDate){
+        localDate?.compareTo(LocalDate.now()) < 0
+    }
+
+    public static def isPastAlready(LocalDateTime localDateTime){
+        localDateTime?.compareTo(LocalDateTime.now()) < 0
     }
 }
