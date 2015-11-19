@@ -2,21 +2,28 @@
 <%@ page import="org.themindmuseum.helpdesk.utils.DateUtils" %>
 <html>
 <head>
+    <meta name="layout" content="main"/>
     <title>My Incidents</title>
 </head>
 <body>
-    <h1>My Incidents</h1>
-    <div>
-        <div>
-            <g:if test="${incidents}">
-                <table>
-                    <thead>
+    <div id="wrapper">
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">${title}</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <div>
+                <g:if test="${incidents}">
+                    <table>
+                        <thead>
                         <th>Concern</th>
                         <th>Filed Date</th>
                         <th>Filed Time</th>
                         <th>Status</th>
                         </thead>
-                    <tbody>
+                        <tbody>
                         <g:each in="${incidents}" var="incident">
                             <g:set var="timeFiledDate" value="${DateUtils.asDate(incident.timeFiled)}"/>
                             <tr>
@@ -26,12 +33,13 @@
                                 <td>${incident.status}</td>
                             </tr>
                         </g:each>
-                    </tbody>
-                </table>
-            </g:if>
-            <g:else>
-                <p>You have no filed incidents.</p>
-            </g:else>
+                        </tbody>
+                    </table>
+                </g:if>
+                <g:else>
+                    <p>You have no filed incidents.</p>
+                </g:else>
+            </div>
         </div>
     </div>
 </body>

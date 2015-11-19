@@ -7,8 +7,14 @@
         <title>Support Tickets Summary</title>
     </head>
     <body>
-    <h1>Support Tickets Summary</h1>
-        <div class="container" role="main">
+    <div id="wrapper">
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Support Tickets Summary</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
             <div>
                 Unassigned Incidents
                 <g:if test="${unassignedIncidents}">
@@ -147,5 +153,6 @@
                 </g:else>
             </div>
         </div>
+    </div>
     </body>
 </html>

@@ -7,8 +7,14 @@
     <meta name="layout" content="main"/>
 </head>
 <body>
-    <h1>My Pending Event Support Requests</h1>
-    <div>
+<div id="wrapper">
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">My Pending Event Support Requests</h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
         <g:if test="${intents}">
             <table>
                 <thead>
@@ -34,6 +40,7 @@
             <p>You have no event support requests.</p>
         </g:else>
     </div>
+</div>
 </body>
 
 </html>

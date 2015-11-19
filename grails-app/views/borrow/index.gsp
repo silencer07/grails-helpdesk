@@ -13,8 +13,14 @@
     </script>
 </head>
 <body>
-    <h1>Borrow an Asset</h1>
-    <div>
+<div id="wrapper">
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Borrow an Asset</h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
         <div>
             <g:hasErrors bean="${assetBorrowingIntent}">
                 <ul class="errors" role="alert">
@@ -36,6 +42,7 @@
             </g:form>
         </div>
     </div>
+</div>
 </body>
 
 </html>

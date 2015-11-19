@@ -3,12 +3,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>My Pending Borrow Requests</title>
+    <title>My Approved Borrow Requests</title>
     <meta name="layout" content="main"/>
 </head>
 <body>
-    <h1>My Pending Borrow Requests</h1>
-    <div>
+<div id="wrapper">
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">My Approved Borrow Requests</h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
         <g:if test="${intents}">
             <table>
                 <thead>
@@ -34,6 +40,7 @@
             <p>You have no borrow requests.</p>
         </g:else>
     </div>
+</div>
 </body>
 
 </html>

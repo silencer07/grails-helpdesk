@@ -9,6 +9,7 @@ class IncidentController extends SupportTicketController{
 
     static allowedMethods = [addAdditionalNotes: 'POST', resolveIncident: 'POST', reopenIncident: 'POST']
 
+    @Secured(["hasAnyRole('IT', 'EMPLOYEE')"])
     def index() {}
 
     @Secured(["hasAnyRole('IT', 'EMPLOYEE')"])
@@ -17,7 +18,7 @@ class IncidentController extends SupportTicketController{
         def incidents = Incident
             .findAllByReportedByAndStatusInList(employee, TicketStatus.unresolvedStatuses)
             .sort {a,b -> b.timeFiled <=> a.timeFiled}
-        render view : 'myIncidents', model: [incidents : incidents]
+        render view : 'myIncidents', model: [incidents : incidents, title : 'My Open Incidents']
     }
 
     @Secured(["hasAnyRole('IT', 'EMPLOYEE')"])
@@ -26,7 +27,7 @@ class IncidentController extends SupportTicketController{
         def incidents = Incident
             .findAllByReportedByAndStatus(employee, TicketStatus.RESOLVED)
             .sort {a,b -> b.timeFiled <=> a.timeFiled}
-        render view : 'myIncidents', model: [incidents : incidents]
+        render view : 'myIncidents', model: [incidents : incidents, title : 'My Resolved Incidents']
     }
 
     @Secured(["hasAnyRole('IT', 'EMPLOYEE')"])

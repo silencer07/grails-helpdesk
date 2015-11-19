@@ -1,25 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
     <head>
-        <!-- The css files that needs to be changed are in grails-app/assets -->
-        <!--
-            Note: the main layout needs to be done.
-            folders:
-            images - put the image there. e.g. mind museum logo
-            stylesheets - the main commented below refers to main.css. of course
-                it also uses something from application.css, errors.css. mobile.css needs not to be fixed
-            javascript - js files. not unless you plan to animate stuff then no need for this
-
-            NEVER USE AN INLINE STYLE. ALL STYLES MUST BE IN CSS FILES!
-        -->
         <meta name="layout" content="main"/>
-
-        <asset:stylesheet src="dataTables.bootstrap.css"/>
-        <asset:javascript src="dataTables.bootstrap.js"/>
-        <asset:javascript src="dataTables.bootstrap.min.js"/>
-
-
-
         <title>Employee Home</title>
     </head>
     <body>
@@ -216,7 +198,6 @@
             <!-- /.row -->
         </div>
         <!-- /#page-wrapper -->
-
     </div>
     </body>
 </html>
