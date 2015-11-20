@@ -8,6 +8,7 @@ import org.themindmuseum.helpdesk.command.AssetApprovalIntentCommand
 import org.themindmuseum.helpdesk.command.AssetBorrowingApprovalEquipmentDTO
 import org.themindmuseum.helpdesk.command.AssetReturningEquipmentDTO
 import org.themindmuseum.helpdesk.command.AssetReturningIntentCommand
+import org.themindmuseum.helpdesk.command.EventApprovalIntentCommand
 import org.themindmuseum.helpdesk.domain.AssetBorrowing
 import org.themindmuseum.helpdesk.domain.Employee
 import org.themindmuseum.helpdesk.domain.EventSupport
@@ -23,7 +24,7 @@ class ItStaffController {
 
     @Secured(["hasAnyRole('IT')"])
     def index() {
-        def itStaff = springSecurityService.currentUser
+        def itStaff = springSecurityService.loadCurrentUser()
         def modelMap = [:]
 
         modelMap.unassignedIncidents = Incident.
@@ -36,18 +37,29 @@ class ItStaffController {
                 itStaff, TicketStatus.unresolvedStatuses, [sort : 'timeFiled'])
         modelMap.approvedBorrowRequests = AssetBorrowing.findAllByAssigneeAndAssetReturned(
                 itStaff, false, [sort : 'returningDate'])
+
         modelMap.upcomingEventsToSupports = EventSupport.withCriteria {
-            or {
-                eq('assignee', itStaff)
+            //there is bug here. for some reason assignee filter does not work
+            /*or {
+                assignee {
+                    eq("id", itStaff.id)
+                }
                 supportStaff {
                     eq("id", itStaff.id) //if user is one of the support staff
                 }
-            }
+            }*/
+            eq('status', TicketStatus.RESOLVED)
+            eq('resourceIssued', true)
             order('startTime', 'desc')
         }
-        modelMap.openEventSupports = EventSupport.
-                findAllByReportedByNotEqualAndAssigneeIsNullAndStatusInList(
-                        itStaff, TicketStatus.unresolvedStatuses, [sort : 'timeFiled'])
+        modelMap.openEventSupports = EventSupport.withCriteria {
+            or{
+                'in'('status', TicketStatus.unresolvedStatuses)
+                eq('resourceIssued', false)
+            }
+            ne('reportedBy', itStaff)
+            order('timeFiled', 'asc')
+        }
         return modelMap
     }
 
@@ -163,7 +175,7 @@ class ItStaffController {
         }
     }
 
-    private def removeNullEquipments(AssetApprovalIntentCommand cmd){
+    private def removeNullEquipments(def cmd){
         Iterator<AssetBorrowingApprovalEquipmentDTO> iterator =
                 cmd.equipments?.iterator()
         while(iterator?.hasNext()){
@@ -252,14 +264,101 @@ class ItStaffController {
     def eventDetails(long id){
         def eventSupport = EventSupport.findByIdAndReportedByNotEqual(id, springSecurityService.currentUser)
         if(eventSupport){
-            return [eventSupport: eventSupport]
+            return [eventSupport: eventSupport, itStaff : getSupportStaff()]
         } else {
             redirect action : 'index'
         }
     }
 
-    @Secured(["hasAnyRole('IT')"])
-    def resolveEventSupport(){
+    private def getSupportStaff(){
+        return Employee.withCriteria {
+            employeeRoles {
+                role {
+                    eq('authority', 'IT')
+                }
+            }
+        }
+    }
 
+    @Secured(["hasAnyRole('IT')"])
+    def saveEventSupportChanges(EventApprovalIntentCommand cmd){
+        def employee = springSecurityService.currentUser
+        def eventSupport = cmd.eventSupport
+        if(params.additionalNotes){
+            eventSupport.resolutionNotes = """
+                   |${employee.fullName} : \n
+                   |${params.additionalNotes}
+                   |${eventSupport.resolutionNotes}""".stripMargin().stripIndent()
+        }
+
+        if(cmd.equipments){
+            eventSupport.equipments.clear()
+            Iterator<AssetBorrowingApprovalEquipmentDTO> iterator =
+                    cmd.equipments?.iterator()
+            while(iterator.hasNext()){
+                def assetApprovalEquipment = iterator.next();
+
+                if(!assetApprovalEquipment || !assetApprovalEquipment.serialNumber){
+                    iterator.remove();
+                }
+
+                if(assetApprovalEquipment?.validate()){
+                    eventSupport.addToEquipments(assetApprovalEquipment.equipment)
+                }
+            }
+        }
+
+        cmd.supportStaff?.each { email ->
+            def itStaff = Employee.withCriteria {
+                eq('email', email)
+                employeeRoles {
+                    role {
+                        eq('authority', 'IT')
+                    }
+                }
+            }[0]
+            eventSupport.addToSupportStaff(itStaff)
+        }
+        eventSupport.assignee = employee
+        eventSupport.save()
+        render view : 'eventDetails', model : [eventSupport : cmd, itStaff : getSupportStaff()]
+    }
+
+    @Secured(["hasAnyRole('IT')"])
+    def resolveEventSupport(EventApprovalIntentCommand cmd){
+        removeNullEquipments(cmd)
+        if(cmd.validate()){
+            def eventSupport = cmd.eventSupport
+            eventSupport.status = TicketStatus.RESOLVED
+            eventSupport.resourceIssued = true
+            saveEventSupportChanges(cmd)
+        } else {
+            def locale = RequestContextUtils.getLocale(request)
+            def errorsMsgs = cmd.errors.allErrors.collect{messageSource.getMessage(it, locale)}.join('\n');
+            println errorsMsgs
+            render view : 'eventDetails', model : [eventSupport : cmd, itStaff : getSupportStaff()]
+        }
+    }
+
+    @Secured(["hasAnyRole('IT')"])
+    def markResourceIssued(EventApprovalIntentCommand cmd){
+        removeNullEquipments(cmd)
+        if(cmd.validate()){
+            def eventSupport = cmd.eventSupport
+            eventSupport.resourceIssued = !eventSupport.resourceIssued
+            eventSupport.save()
+            saveEventSupportChanges(cmd)
+        } else {
+            render view : 'eventDetails', model : [eventSupport : cmd, itStaff : getSupportStaff()]
+        }
+    }
+
+    @Secured(["hasAnyRole('IT')"])
+    def reopenEventSupport(EventApprovalIntentCommand cmd){
+        def eventSupport = cmd.eventSupport
+        eventSupport.status = TicketStatus.OPEN
+        eventSupport.resourceIssued = false
+        eventSupport.save()
+        redirect action: 'eventDetails', id: eventSupport.id
     }
 }

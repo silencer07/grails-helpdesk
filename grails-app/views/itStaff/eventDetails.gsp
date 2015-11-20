@@ -2,11 +2,17 @@
 <%@ page import="org.themindmuseum.helpdesk.utils.DateUtils" %>
 <%@ page import="org.themindmuseum.helpdesk.TicketStatus" %>
 <%@ page import="org.springframework.validation.FieldError" %>
+<%@ page import="org.themindmuseum.helpdesk.domain.Employee" %>
 <html>
 <head>
     <meta name="layout" content="main"/>
     <title>Event Support Details</title>
-    <g:javascript src="equipmentAdding.js"/>
+    <asset:javascript src="equipmentAdding.js"/>
+    <script>
+        function removeStaff(id){
+            $("#" + id).remove();
+        }
+    </script>
 </head>
 <body>
 <div id="wrapper">
@@ -39,8 +45,8 @@
                 End Time : <g:formatDate date="${DateUtils.asDate(eventSupport?.endTime)}" format="MM/dd/yyyy hh:mm a"/> <br/>
                 Status : ${eventSupport.status} <br />
                 Borrowing Request Fulfilled : <g:formatBoolean boolean="${eventSupport.resourceIssued}" true="Yes" false="No"/> <br/>
-                Requested by : ${eventSupport.reportedBy}<br/>
-                Assigned to : ${eventSupport.assignee} <br/>
+                Requested by : ${eventSupport.reportedBy.fullName}<br/>
+                Assigned to : ${eventSupport.assignee?.fullName} <br/>
                 <g:set var="equipmentIndex" value="0"/>
                 <g:if test="${eventSupport?.equipments}">
                     <g:set var="equipmentIndex" value="${eventSupport?.equipments.size()}"/>
@@ -69,18 +75,45 @@
                         </tbody>
                     </table>
                 </g:if>
+                <g:if test="${eventSupport.supportStaff}">
+                    <table>
+                        <thead>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <g:if test="${eventSupport?.status == TicketStatus.OPEN}">
+                                <th></th>
+                            </g:if>
+                        </thead>
+                        <tbody>
+                        <g:each in="${eventSupport?.supportStaff}" var="email" status="i">
+                            <g:set var="staff" value="${Employee.findByEmail(email)}"/>
+                            <tr id="added-staff-${i}">
+                                <td>${staff?.fullName}</td>
+                                <td>${staff?.email}
+                                    <g:hiddenField name="supportStaff" value="${staff.email}"/></td>
+                                <g:if test="${eventSupport?.status == TicketStatus.OPEN}">
+                                    <td><input type="button" value="Remove Staff" onclick="removeStaff(('added-staff-${i}'))"/></td>
+                                </g:if>
+                            </tr>
+                        </g:each>
+                        </tbody>
+                    </table>
+                </g:if>
                 <g:if test="${eventSupport?.status == TicketStatus.OPEN}">
                     <div id="additional-equipment-div">
                         <div>
                             Serial Number: <g:textField name="equipments[${equipmentIndex}].serialNumber"/>
                         </div>
-                        <input type="button" id="add-equipment" value="Add Equipment" onclick="addEquipment()"/>
+                        <input type="button" id="add-equipment" value="Add Equipment" onclick="addEquipment()"/><br/>
+                        Support staff (hold ctrl/command then click for multiple select): <br/>
+                        <g:select name="supportStaff" from="${itStaff}"
+                              optionKey="email" optionValue="fullName" multiple="true"/>
                     </div>
                 </g:if>
                 Description : <br/>
                     <textArea readonly="true">${eventSupport?.description}</textArea><br/>
                 notes: <br/>
-                    <textArea readonly="true">${eventSupport?.resolutionNotes}</textArea>
+                    <textArea readonly="true">${eventSupport?.resolutionNotes}</textArea><br/>
 
                 <g:if test="${eventSupport?.status == TicketStatus.OPEN}">
                     Add additional notes: <br/>

@@ -29,7 +29,7 @@ class AssetBorrowingApprovalEquipmentDTO implements Validateable {
     LocalDateTime returningDate
 
     @PackageScope
-    AssetBorrowing owner
+    def owner
 
     static constraints = {
         serialNumber nullable: false, validator: { serialNumber, instance ->
@@ -58,6 +58,7 @@ class AssetBorrowingApprovalEquipmentDTO implements Validateable {
                     eventSupportEquipments = EventSupport.withCriteria {
                         ge('startTime', instance.borrowedDate)
                         le('endTime', instance.returningDate)
+                        ne('id', instance.owner.id)
                         equipments {
                             eq('id', equipment.id)
                         }
