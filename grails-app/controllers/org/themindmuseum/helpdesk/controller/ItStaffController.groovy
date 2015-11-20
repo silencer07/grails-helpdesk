@@ -247,4 +247,19 @@ class ItStaffController {
             render errorsMsgs
         }
     }
+
+    @Secured(["hasAnyRole('IT')"])
+    def eventDetails(long id){
+        def eventSupport = EventSupport.findByIdAndReportedByNotEqual(id, springSecurityService.currentUser)
+        if(eventSupport){
+            return [eventSupport: eventSupport]
+        } else {
+            redirect action : 'index'
+        }
+    }
+
+    @Secured(["hasAnyRole('IT')"])
+    def resolveEventSupport(){
+
+    }
 }
