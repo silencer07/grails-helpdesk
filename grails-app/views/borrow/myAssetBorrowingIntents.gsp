@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>My Approved Borrow Requests</title>
+    <title>My Pending Borrow Requests</title>
     <meta name="layout" content="main"/>
 </head>
 <body>
@@ -11,7 +11,7 @@
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">My Approved Borrow Requests</h1>
+                <h1 class="page-header">My Pending Borrow Requests</h1>
             </div>
             <!-- /.col-lg-12 -->
         </div>

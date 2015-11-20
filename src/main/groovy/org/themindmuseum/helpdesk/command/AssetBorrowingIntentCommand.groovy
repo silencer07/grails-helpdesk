@@ -16,7 +16,7 @@ class AssetBorrowingIntentCommand implements Validateable{
     static constraints = {
         subject nullable: false, size:1..200
         description nullable: true, maxSize:1000
-        borrowedDate nullable: false, validator
+        borrowedDate nullable: false
         returningDate nullable: false, validator: mustBeLaterThanBorrowedDate
     }
 

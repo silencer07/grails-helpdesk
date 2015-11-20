@@ -34,7 +34,7 @@
         </div>
         <div>
             <g:form action="saveAssetBorrowingIntent">
-                Asset Name : <g:textField name="subject" value="${assetBorrowingIntent?.subject}"/> <br/>
+                Subject : <g:textField name="subject" value="${assetBorrowingIntent?.subject}"/> <br/>
                 Borrow from: <g:textField name="borrowedDate"/> <br/>
                 Return in: <g:textField name="returningDate"/> <br/>
                 Description: <g:textArea name="description" value="${assetBorrowingIntent?.description}"/> <br/>
