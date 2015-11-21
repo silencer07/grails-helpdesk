@@ -5,7 +5,7 @@
 <html>
 <head>
     <meta name="layout" content="main"/>
-    <title>Asset Borrowing Details</title>
+    <title>Receive Borrowed Assets</title>
     <script>
         $(document).ready(function(){
             $("[id*='dateTaggedString']").each(function( index ) {
@@ -15,7 +15,7 @@
     </script>
 </head>
 <body>
-<h1>Asset Borrowing Details</h1>
+<h1>Receive Borrowed Assets</h1>
 <div>
     <div>
         <g:hasErrors bean="${assetBorrowing}">

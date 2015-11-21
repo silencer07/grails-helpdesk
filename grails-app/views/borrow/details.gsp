@@ -4,11 +4,17 @@
 <html>
 <head>
     <title>My Asset Borrowing Details</title>
+    <meta name="layout" content="main"/>
 </head>
 <body>
-<h1>My Asset Borrowing Details</h1>
-<div>
-    <div>
+<div id="wrapper">
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">My Asset Borrowing Details</h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
         Subject : ${assetBorrowing?.subject} <br/>
         Time Filed : <g:formatDate date="${DateUtils.asDate(assetBorrowing?.timeFiled)}" format="MM/dd/yyyy hh:mm a"/> <br/>
         Borrow Time : <g:formatDate date="${DateUtils.asDate(assetBorrowing?.borrowedDate)}" format="MM/dd/yyyy hh:mm a"/> <br/>

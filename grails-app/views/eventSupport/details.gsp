@@ -4,11 +4,17 @@
 <html>
 <head>
     <title>My Event Support Details</title>
+    <meta name="layout" content="main"/>
 </head>
 <body>
-<h1>My Event Support Details</h1>
-<div>
-    <div>
+<div id="wrapper">
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">My Event Support Details</h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
         Subject : ${eventSupport?.subject} <br/>
         Time Filed : <g:formatDate date="${DateUtils.asDate(eventSupport?.timeFiled)}" format="MM/dd/yyyy hh:mm a"/> <br/>
         Start Time : <g:formatDate date="${DateUtils.asDate(eventSupport?.startTime)}" format="MM/dd/yyyy hh:mm a"/> <br/>

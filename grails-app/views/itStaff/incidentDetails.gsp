@@ -6,11 +6,17 @@
 <html>
 <head>
     <title>Incident Details</title>
+    <meta name="layout" content="main"/>
 </head>
 <body>
-<h1>Incident Details</h1>
-<div>
-    <div>
+<div id="wrapper">
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Incident Details</h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
         <g:set var="timeFiledDate" value="${DateUtils.asDate(incident?.timeFiled)}"/>
         Subject : ${incident?.subject} <br/>
         Date : <g:formatDate date="${timeFiledDate}" format="MM/dd/yyyy"/> <br/>
