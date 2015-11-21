@@ -119,7 +119,7 @@
                         <tbody>
                         <g:each in="${upcomingEventsToSupports}" var="event">
                             <tr>
-                                <td><g:link action="eventDetails" id="${event.id}">${event.subject}</g:link></td>
+                                <td><g:link action="receiveEventAssets" id="${event.id}">${event.subject}</g:link></td>
                                 <td><g:formatDate date="${DateUtils.asDate(event.startTime)}" format="MM/dd/yyyy hh:mm a"/></td>
                             </tr>
                         </g:each>

@@ -9,6 +9,7 @@ import org.themindmuseum.helpdesk.command.AssetBorrowingApprovalEquipmentDTO
 import org.themindmuseum.helpdesk.command.AssetReturningEquipmentDTO
 import org.themindmuseum.helpdesk.command.AssetReturningIntentCommand
 import org.themindmuseum.helpdesk.command.EventApprovalIntentCommand
+import org.themindmuseum.helpdesk.command.EventAssetReturningIntentCommand
 import org.themindmuseum.helpdesk.domain.AssetBorrowing
 import org.themindmuseum.helpdesk.domain.Employee
 import org.themindmuseum.helpdesk.domain.EventSupport
@@ -360,5 +361,54 @@ class ItStaffController {
         eventSupport.resourceIssued = false
         eventSupport.save()
         redirect action: 'eventDetails', id: eventSupport.id
+    }
+
+    @Secured(["hasAnyRole('IT')"])
+    def receiveEventAssets(long id){
+        eventDetails(id)
+    }
+
+    @Secured(["hasAnyRole('IT')"])
+    def saveEventAssetReturningChanges(EventAssetReturningIntentCommand cmd) {
+        def employee = springSecurityService.currentUser
+        def eventSupport = cmd.eventSupport
+
+        if(params.additionalNotes){
+            eventSupport.resolutionNotes = """
+                   |${employee.fullName} : \n
+                   |${params.additionalNotes}
+                   |${eventSupport.resolutionNotes}""".stripMargin().stripIndent()
+        }
+
+        cmd.equipments.each { AssetReturningEquipmentDTO dto ->
+            def equipment = dto.equipment
+            if(equipment.status != dto.status){
+                equipment.status = dto.status
+                equipment.dateTagged = dto.dateTagged
+            }
+            if(dto.additionalNotes){
+                equipment.notes = """
+                   |${employee.fullName} : \n
+                   |${dto.additionalNotes}
+                   |${equipment.notes ?: ''}""".stripMargin().stripIndent()
+            }
+            equipment.save()
+        }
+
+        eventSupport.save()
+        redirect action : 'receiveEventAssets', id : eventSupport.id
+    }
+
+    @Secured(["hasAnyRole('IT')"])
+    def markEventAssetReturned(EventAssetReturningIntentCommand cmd) {
+        if(cmd.validate()){
+            def eventSupport = cmd.eventSupport
+            eventSupport.resourceReturned = true
+            saveEventAssetReturningChanges(cmd)
+        } else {
+            def locale = RequestContextUtils.getLocale(request)
+            def errorsMsgs = cmd.errors.allErrors.collect{messageSource.getMessage(it, locale)}.join('\n');
+            render errorsMsgs
+        }
     }
 }
