@@ -145,7 +145,7 @@
                             <a href="#"><i class="fa fa-home fa-fw"></i> Home Page <span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <g:link controller="employee" action="index">Employee's Home Page</g:link>
+                                    <g:link controller="normalEmployee" action="index">Employee's Home Page</g:link>
                                 </li>
                                 <sec:ifAnyGranted roles="IT">
                                     <li>

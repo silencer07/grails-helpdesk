@@ -10,7 +10,7 @@ class IndexController {
         if(SpringSecurityUtils.ifAnyGranted('IT')){
             redirect action : 'index', controller : 'itStaff'
         } else {
-            redirect action : 'index', controller : 'employee'
+            redirect action : 'index', controller : 'normalEmployee'
         }
     }
 }

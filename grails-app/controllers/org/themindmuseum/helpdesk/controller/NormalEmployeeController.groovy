@@ -7,7 +7,7 @@ import org.themindmuseum.helpdesk.domain.EventSupport
 import org.themindmuseum.helpdesk.domain.Incident
 
 
-class EmployeeController {
+class NormalEmployeeController {
 
     def springSecurityService
 
