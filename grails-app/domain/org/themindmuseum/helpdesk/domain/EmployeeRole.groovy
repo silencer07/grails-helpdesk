@@ -76,27 +76,15 @@ class EmployeeRole implements Serializable {
 
 	static void removeAll(Role r, boolean flush = false) {
 		if (r == null) return
-
 		EmployeeRole.where { role == r }.deleteAll()
 
 		if (flush) { EmployeeRole.withSession { it.flush() } }
-	}
-
-	static constraints = {
-		role validator: { Role r, EmployeeRole ur ->
-			if (ur.employee == null || ur.employee.id == null) return
-			boolean existing = false
-			EmployeeRole.withNewSession {
-				existing = EmployeeRole.exists(ur.employee.id, r.id)
-			}
-			if (existing) {
-				return 'userRole.exists'
-			}
-		}
 	}
 
 	static mapping = {
 		id composite: ['employee', 'role']
 		version false
 	}
+
+	static belongsTo = [employee : Employee, role : Role]
 }

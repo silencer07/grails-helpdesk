@@ -24,7 +24,7 @@ class Employee implements Serializable {
 		firstName blank:false, size : 1..100
 		lastName blank:false, size : 1..100
 		email unique:true, blank:false, size : 1..100, email:true
-		password password:true, blank:false, size : 1..100
+		password password:true, blank:false
 		department nullable: false
 		priority nullable : false
 		department nullable : false

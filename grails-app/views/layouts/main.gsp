@@ -220,6 +220,20 @@
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
+                        <li>
+                            <a href="#"><i class="fa fa-user fa-fw"></i> User <span
+                                    class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <g:link controller="employee" action="index">User List</g:link>
+                                </li>
+                                <li>
+                                    <g:link controller="employee"
+                                            action="create">Create User Account</g:link>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
                     </ul>
                 </div>
                 <!-- /.sidebar-collapse -->

@@ -9,4 +9,8 @@ class Department {
     }
 
     static hasMany = [ employees:Employee ]
+
+    String toString(){
+        return name
+    }
 }
