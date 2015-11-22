@@ -10,7 +10,8 @@ import java.util.Date;
 
 public class DateUtils {
 
-    public static final DEFAULT_JQUERY_DATETIME_PICKER_FORMAT = 'MM/dd/yyyy hh:mm a'
+    public static final DEFAULT_DATE_FORMAT = 'MM/dd/yyyy'
+    public static final DEFAULT_JQUERY_DATETIME_PICKER_FORMAT = DEFAULT_DATE_FORMAT + ' hh:mm a'
 
     public static Date asDate(LocalDate localDate) {
         return Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
@@ -40,6 +41,10 @@ public class DateUtils {
 
     public static def formatJQueryDateTimeInput(LocalDateTime localDateTime){
         return localDateTime ? asDate(localDateTime).format(DEFAULT_JQUERY_DATETIME_PICKER_FORMAT) : ''
+    }
+
+    public static def formatJQueryDateInput(LocalDate localDate){
+        return localDate ? asDate(localDate).format(DEFAULT_JQUERY_DATETIME_PICKER_FORMAT) : ''
     }
 
     public static def isPastAlready(LocalDate localDate){

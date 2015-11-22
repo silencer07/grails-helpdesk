@@ -16,4 +16,8 @@ class Vendor {
     }
 
     static hasMany = [equipments : Equipment]
+
+    String toString(){
+        return name
+    }
 }
