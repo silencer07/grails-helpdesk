@@ -15,31 +15,71 @@
             </div>
             <!-- /.col-lg-12 -->
         </div>
-        <g:set var="timeFiledDate" value="${DateUtils.asDate(incident?.timeFiled)}"/>
-        Subject : ${incident?.subject} <br/>
-        Date : <g:formatDate date="${timeFiledDate}" format="MM/dd/yyyy"/> <br/>
-        Time : <g:formatDate date="${timeFiledDate}" format="mm:ss a"/> <br/>
-        Equipment : ${incident?.equipment.name} <br/>
-        Manufacturer : ${incident?.equipment.manufacturer} <br/>
-        Serial No. : ${incident?.equipment.serialNumber} <br/>
-        Status : ${incident?.status} <br/>
-        Concern : <br/>
-            <textArea readonly="true">${incident?.description}</textArea>
-        notes:
-            <textArea readonly="true">${incident?.resolutionNotes}</textArea>
+        <div class="row">
+            <div class="col-lg-10">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <g:set var="timeFiledDate" value="${DateUtils.asDate(incident?.timeFiled)}"/>
+                                    <div class="form-group">
+                                        <label> Subject : ${incident?.subject}</label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Date : <g:formatDate date="${timeFiledDate}" format="MM/dd/yyyy"/></label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label> Time : <g:formatDate date="${timeFiledDate}" format="mm:ss a"/></label>
+                                    </div>
+                                    <div class="form-group">
+                                       <label>Equipment : ${incident?.equipment.name}</label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Manufacturer : ${incident?.equipment.manufacturer}</label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Serial No. : ${incident?.equipment.serialNumber}</label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Status : ${incident?.status}</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label> Concern :</label>
+                                    <textArea class="form-control" rows="3" readonly="true">${incident?.description}</textArea>
+                                </div>
+                                <div class="form-group">
+                                    <label>notes:</label>
+                                    <textArea class="form-control" rows="3" readonly="true">${incident?.resolutionNotes}</textArea>
+                                </div>
+                                <div class=form-group">
+                                    <g:form method="post">
+                                        <g:hiddenField name="incidentId" value="${incident?.id}"/>
+                                        <g:if test="${incident?.status == TicketStatus.OPEN}">
+                                            <div class="form-group">
+                                                <label>Add additional notes:</label>
+                                                <g:textArea class="form-control" rows="3" name="additionalNotes"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <g:actionSubmit class="btn btn-default" value="Add Notes" action="addAdditionalNotes"/>
+                                                <g:actionSubmit class="btn btn-default" value="Resolve Incident" action="resolveIncident"/>
+                                            </div>
 
-        <g:form method="post">
-            <g:hiddenField name="incidentId" value="${incident?.id}"/>
-            <g:if test="${incident?.status == TicketStatus.OPEN}">
-                Add additional notes: <br/>
-                <g:textArea name="additionalNotes"/>
-                <g:actionSubmit value="Add Notes" action="addAdditionalNotes"/>
-                <g:actionSubmit value="Resolve Incident" action="resolveIncident"/>
-            </g:if>
-            <g:else>
-                <g:actionSubmit value="Reopen Incident" action="reopenIncident"/>
-            </g:else>
-        </g:form>
+                                        </g:if>
+                                        <g:else>
+                                            <div class="form-group">
+                                            <g:actionSubmit class="btn btn-default" value="Reopen Incident" action="reopenIncident"/>
+                                            </div>
+                                        </g:else>
+                                    </g:form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 </body>
