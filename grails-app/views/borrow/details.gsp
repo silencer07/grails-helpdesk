@@ -101,7 +101,6 @@
                                         </g:if>
                                     </g:form>
                                 </div>
-
                             </div>
                         </div>
                     </div>
