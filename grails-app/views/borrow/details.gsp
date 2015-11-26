@@ -15,6 +15,7 @@
             </div>
             <!-- /.col-lg-12 -->
         </div>
+
         Subject : ${assetBorrowing?.subject} <br/>
         Time Filed : <g:formatDate date="${DateUtils.asDate(assetBorrowing?.timeFiled)}" format="MM/dd/yyyy hh:mm a"/> <br/>
         Borrow Time : <g:formatDate date="${DateUtils.asDate(assetBorrowing?.borrowedDate)}" format="MM/dd/yyyy hh:mm a"/> <br/>
