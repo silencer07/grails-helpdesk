@@ -48,7 +48,7 @@
                                     </table>
                                 </g:if>
                                 <g:else>
-                                    <p>No incidents filed</p>
+                                    <p>No Incidents Filed</p>
                                 </g:else>
                             </div>
                             <!-- /.table-responsive -->
