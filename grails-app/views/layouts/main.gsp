@@ -33,6 +33,10 @@
     <asset:javascript src="dataTables.bootstrap.js"/>
     <asset:javascript src="dataTables.bootstrap.min.js"/>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.5.0/fullcalendar.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.5.0/fullcalendar.js"></script>
+
     <asset:stylesheet src="application.css"/>
     <asset:javascript src="application.js"/>
     <g:layoutHead/>
