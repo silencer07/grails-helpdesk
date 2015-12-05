@@ -23,9 +23,7 @@
                             start : '<g:formatDate date="${c.start}" format="yyyy-MM-dd'T'hh:mm:ss"/>',
                             end : '<g:formatDate date="${c.end}" format="yyyy-MM-dd'T'hh:mm:ss"/>'
                         }
-                        <g:if test="${i + 1 == calendar.size()}">
                         ,
-                        </g:if>
                     </g:each>
                 ],
                 eventRender: function(event, element) {
