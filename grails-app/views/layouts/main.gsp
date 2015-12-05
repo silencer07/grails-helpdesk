@@ -122,7 +122,7 @@
                         <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
                         </li>
                         <li class="divider"></li>
-                        <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        <li><g:link controller="logout"><i class="fa fa-sign-out fa-fw"></i> Logout</g:link>
                         </li>
                     </ul>
                     <!-- /.dropdown-user -->
@@ -211,33 +211,48 @@
                             <!-- /.nav-second-level -->
                         </li>
                         <li>
-                            <a href="#"><i class="fa fa-laptop fa-fw"></i> Equipment <span
+                            <a href="#"><i class="fa fa-laptop fa-fw"></i> Resource Calendar <span
                                     class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <g:link controller="equipment" action="index">Equipment List</g:link>
+                                    <g:link controller="calendar" action="equipment">Equipment</g:link>
                                 </li>
                                 <li>
-                                    <g:link controller="equipment"
-                                            action="create">Create Equipment</g:link>
+                                    <g:link controller="calendar" action="itSupport">Support Staff</g:link>
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
-                        <li>
-                            <a href="#"><i class="fa fa-user fa-fw"></i> User <span
-                                    class="fa arrow"></span></a>
-                            <ul class="nav nav-second-level">
-                                <li>
-                                    <g:link controller="employee" action="index">User List</g:link>
-                                </li>
-                                <li>
-                                    <g:link controller="employee"
-                                            action="create">Create User Account</g:link>
-                                </li>
-                            </ul>
-                            <!-- /.nav-second-level -->
-                        </li>
+                        <sec:ifAnyGranted roles="IT">
+                            <li>
+                                <a href="#"><i class="fa fa-laptop fa-fw"></i> Equipment <span
+                                        class="fa arrow"></span></a>
+                                <ul class="nav nav-second-level">
+                                    <li>
+                                        <g:link controller="equipment" action="index">Equipment List</g:link>
+                                    </li>
+                                    <li>
+                                        <g:link controller="equipment"
+                                                action="create">Create Equipment</g:link>
+                                    </li>
+                                </ul>
+                                <!-- /.nav-second-level -->
+                            </li>
+                            <li>
+                                <a href="#"><i class="fa fa-user fa-fw"></i> User <span
+                                        class="fa arrow"></span></a>
+                                <ul class="nav nav-second-level">
+                                    <li>
+                                        <g:link controller="employee" action="index">User List</g:link>
+                                    </li>
+                                    <li>
+                                        <g:link controller="employee"
+                                                action="create">Create User Account</g:link>
+                                    </li>
+                                </ul>
+                                <!-- /.nav-second-level -->
+                            </li>
+                        </sec:ifAnyGranted>
                     </ul>
                 </div>
                 <!-- /.sidebar-collapse -->
