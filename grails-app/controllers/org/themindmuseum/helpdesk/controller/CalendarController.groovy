@@ -18,6 +18,7 @@ class CalendarController {
                 support.title = equipment.name
                 support.start = DateUtils.asDate(borrowing.borrowedDate)
                 support.end = DateUtils.asDate(borrowing.returningDate)
+                support.description = equipment.serialNumber
 
                 supportCalendar << support
             }
@@ -28,6 +29,7 @@ class CalendarController {
                 support.title = equipment.name
                 support.start = DateUtils.asDate(event.startTime)
                 support.end = DateUtils.asDate(event.endTime)
+                support.description = equipment.serialNumber
 
                 supportCalendar << support
             }

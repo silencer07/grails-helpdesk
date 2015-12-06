@@ -13,21 +13,24 @@
                     center: 'title',
                     right: 'month,basicWeek,basicDay'
                 },
-                defaultDate: '2015-12-12',
-                editable: true,
                 displayEventEnd : true,
+                timeFormat: 'h:mm a',
                 events: [
                     <g:each in="${calendar}" status="i" var="c">
                         {
                             title : '${c.title}',
                             start : '<g:formatDate date="${c.start}" format="yyyy-MM-dd'T'hh:mm:ss"/>',
-                            end : '<g:formatDate date="${c.end}" format="yyyy-MM-dd'T'hh:mm:ss"/>'
+                            end : '<g:formatDate date="${c.end}" format="yyyy-MM-dd'T'hh:mm:ss"/>',
+                            description: '${c.description}'
                         }
                         ,
                     </g:each>
                 ],
                 eventRender: function(event, element) {
                     element.find('.fc-time').append("<br/>");
+                    if(event.description !== undefined){
+                        element.find('.fc-title').append("<br/>").append(event.description);
+                    }
                 }
 
             });
