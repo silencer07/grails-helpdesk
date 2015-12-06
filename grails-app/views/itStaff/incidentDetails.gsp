@@ -36,7 +36,7 @@
                                 </tr>
                                 <tr>
                                     <td>Time:</td>
-                                    <td> <g:formatDate date="${timeFiledDate}" format="mm:ss a"/></td>
+                                    <td> <g:formatDate date="${timeFiledDate}" format="hh:mm a"/></td>
                                 </tr>
                                 <tr>
                                     <td>Equipment:</td>
@@ -80,7 +80,7 @@
                                             </div>
                                             <div class="form-group">
                                                 Assign Ticket : <g:select class="btn dropdown-toggle" name="assignee" from="${itStaff}" optionKey="email" optionValue="fullName"
-                                                                          noSelection='["${sec.username(null, null)}":"Assign to me"]' value="${incident?.assignee?.email}"/>
+                                                                          noSelection='["${sec.username(null, null)}":"Assign to me"]' value="${incident?.assignee?.email ?: sec.username(null, null)}"/>
                                             </div>
                                             <div class="form-group">
                                                 Change equipment status: <g:select class="btn dropdown-toggle" name="equipmentStatus" from="${EquipmentStatus.statusesForSupportTickets()}"
