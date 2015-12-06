@@ -14,6 +14,22 @@
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <div id="list-equipment" class="content scaffold-list" role="main">
+                                    <g:if test="${flash.message}">
+                                        <div class="message" role="status">${flash.message}</div>
+                                    </g:if>
+                                    <f:table collection="${equipmentList}"  />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div id="list-equipment" class="content scaffold-list" role="main">
                 <g:if test="${flash.message}">
                     <div class="message" role="status">${flash.message}</div>
