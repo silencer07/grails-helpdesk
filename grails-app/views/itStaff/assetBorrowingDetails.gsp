@@ -20,13 +20,13 @@
         <div>
             <g:hasErrors bean="${assetBorrowing}">
                 <ul class="errors" role="alert">
-                <g:each in="${assetBorrowing.equipments}" var="equipment">
-                    <g:eachError bean="${equipment}" var="error">
-                        <li <g:if test="${error in FieldError}">data-field-id="${error.field}"</g:if>>
-                            <g:message error="${error}"/>
-                        </li>
-                    </g:eachError>
-                </g:each>
+                    <g:each in="${assetBorrowing.equipments}" var="equipment">
+                        <g:eachError bean="${equipment}" var="error">
+                            <li <g:if test="${error in FieldError}">data-field-id="${error.field}"</g:if>>
+                                <g:message error="${error}"/>
+                            </li>
+                        </g:eachError>
+                    </g:each>
                 </ul>
             </g:hasErrors>
         </div>
@@ -43,7 +43,7 @@
                 Assigned to : ${assetBorrowing.assignee} <br/>
                 <g:if test="${assetBorrowing?.assetLent}">
                     Returned Time : <g:formatDate date="${assetBorrowing?.returnedDate ? DateUtils.asDate(assetBorrowing?.returnedDate) : null}"
-                                          format="MM/dd/yyyy hh:mm a"/> <br/>
+                                                  format="MM/dd/yyyy hh:mm a"/> <br/>
                 </g:if>
                 <g:set var="equipmentIndex" value="0"/>
                 <g:if test="${assetBorrowing?.equipments}">
@@ -82,9 +82,9 @@
                     </div>
                 </g:if>
                 Description : <br/>
-                    <textArea readonly="true">${assetBorrowing?.description}</textArea><br/>
+                <textArea readonly="true">${assetBorrowing?.description}</textArea><br/>
                 notes: <br/>
-                    <textArea readonly="true">${assetBorrowing?.resolutionNotes}</textArea>
+                <textArea readonly="true">${assetBorrowing?.resolutionNotes}</textArea>
 
                 <g:hiddenField name="assetBorrowingId" value="${assetBorrowing?.id}"/><br/>
                 <g:if test="${assetBorrowing?.status == TicketStatus.OPEN}">

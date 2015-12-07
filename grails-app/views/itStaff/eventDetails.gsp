@@ -25,15 +25,15 @@
         </div>
         <div>
             <g:hasErrors bean="${eventSupport}">
-                <ul class="errors" role="alert">
-                <g:each in="${eventSupport.equipments}" var="equipment">
-                    <g:eachError bean="${equipment}" var="error">
-                        <li <g:if test="${error in FieldError}">data-field-id="${error.field}"</g:if>>
-                            <g:message error="${error}"/>
-                        </li>
-                    </g:eachError>
-                </g:each>
-                </ul>
+                    <ul class="errors" role="alert">
+                    <g:each in="${eventSupport.equipments}" var="equipment">
+                        <g:eachError bean="${equipment}" var="error">
+                            <li <g:if test="${error in FieldError}">data-field-id="${error.field}"</g:if>>
+                                <g:message error="${error}"/>
+                            </li>
+                        </g:eachError>
+                    </g:each>
+                    </ul>
             </g:hasErrors>
         </div>
         <div>
