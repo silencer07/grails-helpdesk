@@ -30,14 +30,16 @@ class InitialDataService {
     def itRole
 
     def initializeSampleData() {
-        initializeDepartments()
-        initializeRoles()
-        initializeEmployees()
-        initializeVendors()
-        initializeEquipments()
-        initializeIncidents()
-        initializeAssetBorrowings()
-        initializeEventSupport()
+        if(Department.count() != 2){
+            initializeDepartments()
+            initializeRoles()
+            initializeEmployees()
+            initializeVendors()
+            initializeEquipments()
+            initializeIncidents()
+            initializeAssetBorrowings()
+            initializeEventSupport()
+        }
     }
 
     def initializeDepartments(){
